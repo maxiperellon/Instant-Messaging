@@ -1,5 +1,4 @@
 # Instant-Messaging
 
 Alumnos:
-        Grasso, Ornella
-        Perellón, Maximiliano
+        Grasso, Ornella - Perellón, Maximiliano
