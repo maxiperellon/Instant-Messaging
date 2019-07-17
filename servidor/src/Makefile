@@ -12,10 +12,7 @@ OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
 DEPS=$(patsubst %,$(IDIR)/%,$(_DEPS))
 
 servidor:	$(OBJ)
-	mkdir $(ODIR)
-	mkdir $(BDIR)
 	$(CC) -o $(BDIR)/$(APP) $(OBJ) -pthread
-	mv $(OBJ) $(ODIR)
 
 $(ODIR)/%.o:	%.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
@@ -25,14 +22,9 @@ $(ODIR)/%.o:	%.c $(DEPS)
 # $< el primer argumento de la derecha del ':'
 # $^ toda la lista de la derecha de ':'
 
-clean:
-	rm -f servidor $(ODIR)/*.o
+crear:
+	mkdir -p $(ODIR)/ $(BDIR)/
 
-install:
-	/bin/cp $(APP) /bin/
-
-uninstall:
-	/bin/rm /bin/$(APP)
-
-
+borrar:
+	rm -r $(BDIR)/ $(ODIR)/
 
