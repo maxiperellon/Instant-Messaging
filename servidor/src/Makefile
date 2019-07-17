@@ -3,6 +3,7 @@ CC=gcc
 CFLAGS=-I ../include/
 ODIR=../obj
 IDIR=../include
+BDIR=../bin
 
 _DEPS=header.h 
 _OBJ=servidor.o 
@@ -11,8 +12,10 @@ OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
 DEPS=$(patsubst %,$(IDIR)/%,$(_DEPS))
 
 servidor:	$(OBJ)
-	$(CC) -o $(APP) $(OBJ) -pthread
-
+	mkdir $(ODIR)
+	mkdir $(BDIR)
+	$(CC) -o $(BDIR)/$(APP) $(OBJ) -pthread
+	mv $(OBJ) $(ODIR)
 
 $(ODIR)/%.o:	%.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)
