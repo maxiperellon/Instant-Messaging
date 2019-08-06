@@ -7,7 +7,6 @@
 #include <string.h> 
 #include <sys/socket.h> 
 #include <sys/types.h> 
-#define MAX 80 
 #define SERVER_PORT 8080 
 #define NUM_CLIENTES 5
 
