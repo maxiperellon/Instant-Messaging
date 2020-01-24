@@ -1,17 +1,18 @@
-APP=servidor
+APP=server
 CC=gcc
+DEPS= ../include/header.h
 CFLAGS=-I ../include/
 ODIR=../obj
 IDIR=../include
 BDIR=../bin
 
-_DEPS=header.h 
-_OBJ=servidor.o 
+_DEPS=header.h
+_OBJ=server.o
 
-OBJ=$(patsubst %,$(ODIR)/%,$(_OBJ))
-DEPS=$(patsubst %,$(IDIR)/%,$(_DEPS))
+OBJ=$(ODIR)/$(_OBJ)
+DEPS=$(IDIR)/$(_DEPS)
 
-servidor:	$(OBJ)
+server:	$(OBJ)
 	$(CC) -o $(BDIR)/$(APP) $(OBJ) -lpthread
 
 $(ODIR)/%.o:	%.c $(DEPS)
@@ -22,9 +23,9 @@ $(ODIR)/%.o:	%.c $(DEPS)
 # $< el primer argumento de la derecha del ':'
 # $^ toda la lista de la derecha de ':'
 
-crear:
+create:
 	mkdir -p $(ODIR)/ $(BDIR)/
 
-borrar:
+delete:
 	rm -r $(BDIR)/ $(ODIR)/
 

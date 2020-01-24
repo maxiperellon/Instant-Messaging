@@ -4,7 +4,9 @@
 #include <netdb.h> 
 #include <netinet/in.h> 
 #include <stdlib.h> 
-#include <string.h> 
+#include <string.h>
+#include <stdio.h>
+#include <unistd.h>
 #include <sys/socket.h> 
 #include <sys/types.h> 
 #define SERVER_PORT 8080 
