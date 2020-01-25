@@ -1,12 +1,9 @@
 #include "header.h"
 
-int main(int argc, char *argv[]) 
-{ 
-    int cont=0, l, i, b;
+int main(int argc, char *argv[]) {
     struct sockaddr_in serv_addr;
 	struct sockaddr_in cli_addr;
 	pthread_t thread;
-
 
     //CREACION DEL SOCKET
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -23,35 +20,36 @@ int main(int argc, char *argv[])
 	socklen_t size_serv =  sizeof(serv_addr); /* Obtenemos el tamaño de la estructura en bytes (16)*/
 
     /* Asociamos el socket a un puerto local */
-	b = bind(sockfd, (struct sockaddr *)&serv_addr, size_serv);
-
+	int b = bind(sockfd, (struct sockaddr *)&serv_addr, size_serv);
 	if (b < 0) { /* Comprobamos si se asocio el socket a un puerto local */
-    	printf("ERROR: error de bind");
+    	printf("ERROR: error al asociar el socket al puerto local");
+    	close(sockfd);
     	return 1;
   	}
 
     /* Ponemos el puerto a la escucha */
-	l = listen(sockfd, NUM_CLIENTES);
-
+	int l = listen(sockfd, NUM_CLIENTES);
 	if (l < 0) { /* Comprobamos si se puso a la escucha el puerto local */
-		printf("ERROR: error de listen");
+		printf("ERROR: error al escuchar el puerto (%d)", ntohs(serv_addr.sin_port));
 		return 1;
 	}
 	
 	system("clear");
-	printf("\n\n");	
+	printf("\n\n");
 	printf("\tServidor CONECTADO\n");
-	printf("\tSOCKET %d ESCUCHANDO ...\n\n\n", SERVER_PORT);
+	printf("\tSOCKET ESCUCHANDO...\n");
+    printf("\tPUERTO: %d\n\n\n", SERVER_PORT);
 
 
 	while(1) {
-	    socklen_t size_cli = sizeof(cli_addr);
+        int cont;
+        socklen_t size_cli = sizeof(cli_addr);
 		int conn_accept = accept(sockfd, (struct sockaddr*)&cli_addr, &size_cli);
-		if(conn_accept>0) {
-		    for(i=0; i < NUM_CLIENTES; i++) { /* Agregar Cliente */
+		if (conn_accept > 0) {
+		    for (int i = 0; i < NUM_CLIENTES; i++) { /* Agregar Cliente */
 				cont++;
-				if(cont > NUM_CLIENTES) {
-					printf("\tERROR: Supero la cantidad maxima de clientes\n");
+				if (cont > NUM_CLIENTES) {
+					printf("\tERROR: Supero la cantidad máxima de clientes\n");
 					close(conn_accept);
 				}
 			}
