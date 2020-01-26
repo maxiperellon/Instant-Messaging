@@ -48,25 +48,22 @@ int main(int argc, char *argv[]) {
         int cont;
         socklen_t cli_size = sizeof(cli_addr); /* Obtenemos el tamaño de la estructura en bytes (16)*/
 		int conn_accept = accept(socket_fd, (struct sockaddr*)&cli_addr, &cli_size);
-		if (conn_accept > 0) {
-		    for (int i = 0; i < NUM_CLIENTES; i++) { /* Agregar Cliente */
-                if (cont <= NUM_CLIENTES) {
-                    if (pthread_create(&thread, NULL, connection, (void *)&conn_accept) < 0) {
-                        perror("Error al crear el hilo...");
-                    } else {
-                        cont++;
-                        puts("Se acepto la conexion...");
-                    }
-				} else {
-                    printf("\tERROR: Superó la cantidad máxima de clientes\n");
-                    close(conn_accept);
-				}
-			}
-		}else {
-		    puts("ERROR: error al conectarse...");
-		    exit(0);
+		if (conn_accept < 0) {
+		    perror("Error al conectarse al servidor");
 		}
-	}
+
+        if (cont < NUM_CLIENTES) {
+            if (pthread_create(&thread, NULL, connection, (void *) &conn_accept) < 0) {
+                perror("Error al crear el hilo...");
+            } else {
+                puts("Se acepto la conexion de: ... ");
+                cont++;
+            }
+        } else {
+            printf("\n--> ERROR: Superó la cantidad máxima de clientes conectados...\n");
+        }
+    }
+
 }
 
 void *connection() {
