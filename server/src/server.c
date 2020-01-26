@@ -1,9 +1,10 @@
 #include "header.h"
 
+void *connection();
+
 int main(int argc, char *argv[]) {
     struct sockaddr_in server_addr;
     struct sockaddr_in cli_addr;
-	pthread_t thread;
 
     //CREACION DEL SOCKET
     int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
@@ -37,22 +38,38 @@ int main(int argc, char *argv[]) {
 	printf("\n");
 	printf("\tServidor CONECTADO\n");
 	printf("\tSOCKET ESCUCHANDO...\n");
-    printf("\tPUERTO: %d\n\n\n", ntohs(server_addr.sin_port));
+    printf("\tPUERTO: %d\n\n", ntohs(server_addr.sin_port));
+
+    puts("\t\nEsperando las conexiones...");
+    pthread_t thread;
 
 
-	while(1) {
+    while(1) {
         int cont;
         socklen_t cli_size = sizeof(cli_addr); /* Obtenemos el tamaño de la estructura en bytes (16)*/
 		int conn_accept = accept(socket_fd, (struct sockaddr*)&cli_addr, &cli_size);
 		if (conn_accept > 0) {
 		    for (int i = 0; i < NUM_CLIENTES; i++) { /* Agregar Cliente */
 				cont++;
-				if (cont > NUM_CLIENTES) {
-					printf("\tERROR: Supero la cantidad máxima de clientes\n");
-					close(conn_accept);
+				if (cont < NUM_CLIENTES) {
+                    if (pthread_create(&thread, NULL, connection, (void *)&conn_accept) < 0) {
+                        perror("Error al crear el hilo...");
+                    } else {
+                        puts("Se acepto la conexion...");
+                    }
+				} else {
+                    printf("\tERROR: Superó la cantidad máxima de clientes\n");
+                    close(conn_accept);
 				}
 			}
+		}else {
+		    puts("ERROR: error al conectarse...");
+		    exit(0);
 		}
 	}
+}
 
-} 
+void *connection() {
+    printf("conexion");
+    return 0;
+}
