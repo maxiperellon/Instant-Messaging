@@ -50,11 +50,11 @@ int main(int argc, char *argv[]) {
 		int conn_accept = accept(socket_fd, (struct sockaddr*)&cli_addr, &cli_size);
 		if (conn_accept > 0) {
 		    for (int i = 0; i < NUM_CLIENTES; i++) { /* Agregar Cliente */
-				cont++;
-				if (cont < NUM_CLIENTES) {
+                if (cont <= NUM_CLIENTES) {
                     if (pthread_create(&thread, NULL, connection, (void *)&conn_accept) < 0) {
                         perror("Error al crear el hilo...");
                     } else {
+                        cont++;
                         puts("Se acepto la conexion...");
                     }
 				} else {
