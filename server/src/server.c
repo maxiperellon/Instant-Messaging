@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
 
 
     while(1) {
-        int cont;
+        int cont = 0;
         socklen_t cli_size = sizeof(cli_addr); /* Obtenemos el tamaño de la estructura en bytes (16)*/
 		int conn_accept = accept(socket_fd, (struct sockaddr*)&cli_addr, &cli_size);
 		if (conn_accept < 0) {
@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
                 cont++;
             }
         } else {
-            printf("\n--> ERROR: Superó la cantidad máxima de clientes conectados...\n");
+            printf("\n--> Se superó la cantidad máxima de clientes conectados...\n");
         }
     }
 
