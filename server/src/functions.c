@@ -2,6 +2,7 @@
 // Created by Maximiliano Perellón on 28/01/2020.
 //
 #include "header.h"
+#include "extern.h"
 
 void subCadena(char *subCad, char *cad, int inicio, int cuantos) {
     int i,j=0;

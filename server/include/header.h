@@ -20,5 +20,3 @@ struct clients {
     char user[MAXLINE-4];
     int sign_in;
 } s_cli[NUM_CLIENTS];
-
-extern int clients;

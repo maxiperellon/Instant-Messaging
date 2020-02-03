@@ -1,4 +1,5 @@
 #include "header.h"
+#include "extern.h"
 
 int main(int argc, char *argv[]) {
     struct sockaddr_in server_addr;
