@@ -1,6 +1,3 @@
-#ifndef HEADER_H
-   #define HEADER_H
-
 #include <netdb.h>
 #include <netinet/in.h>
 #include <stdlib.h> 
@@ -9,8 +6,10 @@
 #include <sys/types.h>
 #include <stdio.h>
 #include <unistd.h>
-#define SERVER_PORT 8080 
+#include <pthread.h>
 
+#define SERVER_PORT 8000
+#define MAXLINE 512
 
-
-#endif
+void *send_msg(void* s);
+void *recv_msg(void* r);

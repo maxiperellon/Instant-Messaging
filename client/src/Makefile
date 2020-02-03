@@ -6,8 +6,8 @@ ODIR=../obj
 IDIR=../include
 BDIR=../bin
 
-_DEPS=header.h 
-_OBJ=client.o
+_DEPS=header.h
+_OBJ=client.o functions.o
 
 OBJ=$(ODIR)/$(_OBJ)
 DEPS=$(IDIR)/$(_DEPS)
