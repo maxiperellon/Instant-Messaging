@@ -1,5 +1,3 @@
-#ifndef HEADER_H
-   #define HEADER_H
 
 #include <netdb.h> 
 #include <netinet/in.h> 
@@ -10,8 +8,17 @@
 #include <sys/socket.h> 
 #include <sys/types.h>
 #include <pthread.h>
-#define SERVER_PORT 8080 
-#define NUM_CLIENTES 5
 
+#define SERVER_PORT 8000
+#define NUM_CLIENTS 10
+#define MAXLINE 512
 
-#endif
+void* connection(void* d);
+
+struct clients {
+    int socket;
+    char user[MAXLINE-4];
+    int sign_in;
+} s_cli[NUM_CLIENTS];
+
+extern int clients;
