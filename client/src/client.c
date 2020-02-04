@@ -5,6 +5,7 @@ int main(int argc, char *argv[]) {
     /* Asociamos el socket a un puerto local */
     struct sockaddr_in server_addr;
     socklen_t server_size = sizeof(server_addr);
+    memset(&server_addr, 0, server_size);
     server_addr.sin_family = AF_INET; //tipo de conexión (por red o interna)
     server_addr.sin_port = htons(SERVER_PORT); //es el numero que le corresponde al puerto
     pthread_t send_thread, recv_thread;
