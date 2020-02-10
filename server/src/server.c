@@ -7,9 +7,7 @@ int main(int argc, char *argv[]) {
 
     //CREACION DEL SOCKET
     int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (socket_fd > 0){
-        printf("\n--> Se creó el socket con éxito...\n");
-    } else {
+    if (socket_fd < 0){
         printf("\n--> Error al crear el socket...\n");
         exit(0);
     }
@@ -33,7 +31,7 @@ int main(int argc, char *argv[]) {
 		return 1;
 	}
 	
-	//system("clear");
+	system("clear");
 	printf("\n");
 	printf("\tServidor CONECTADO\n");
 	printf("\tSOCKET ESCUCHANDO...\n");
@@ -42,8 +40,8 @@ int main(int argc, char *argv[]) {
     puts("\t\nEsperando las conexiones...");
     pthread_t thread[NUM_CLIENTS];
 
-    for(int i = 0; i < NUM_CLIENTS; i++)
-        strcpy(s_cli[i].user, " ");
+//    for(int i = 0; i < NUM_CLIENTS; i++)
+//        strcpy(s_cli[i].user, " ");
 
     while(1) {
         socklen_t cli_size = sizeof(cli_addr); /* Obtenemos el tamaño de la estructura en bytes (16)*/
