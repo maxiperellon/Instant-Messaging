@@ -11,6 +11,7 @@ void* recv_msg(void* r) {
         recv(*id, buffer, MAXLINE,0);
         printf("%s\n", buffer);
         fflush(stdout);
+        sleep(3);
     }
 }
 
@@ -18,8 +19,10 @@ void* send_msg(void* s) {
     int* id;
     char buffer[MAXLINE];
     id = (int*) s;
+
     printf("\n\t\t\t>>> BIENVENIDO AL CHAT <<<<\n\n");
     printf("\tIntroduce el mensaje\n");
+
     while(1) {
         printf("\t\n-> ");
         fgets(buffer, MAXLINE, stdin);
