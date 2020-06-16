@@ -21,6 +21,18 @@ int search_client(char* user) {
     return -1;
 }
 
+void* welcome(int id, char *buffer, char *name) {
+    strcpy(s_cli[id].user, name);
+    strcpy(buffer, "\tHola ");
+    strcat(buffer, name);
+    strcat(buffer, "!!!");
+
+    if (s_cli[id].sign_in == 1) {
+        send(s_cli[id].socket, buffer, MAXLINE, 0);
+    }
+    return 0;
+}
+
 void* add_client(int id, char *buffer, char *name) {
     int len = strlen(buffer);
     //Le quitamos el ADD
@@ -29,7 +41,7 @@ void* add_client(int id, char *buffer, char *name) {
     //Se informa a todos menos a él mismo y al que se haya ido
     strcpy(buffer, "El usuario ");
     strcat(buffer, name);
-    strcat(buffer, " ha entrado en el chat.");
+    strcat(buffer, " ha ingresado en el chat.");
     for(int i = 0; i < clients; i++) {
         if (i != id && s_cli[i].sign_in == 1) {
             send(s_cli[i].socket, buffer, MAXLINE, 0);
@@ -80,11 +92,12 @@ void* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
     strcat(name, temp);
     if(destino != -1)
         send(destino, name, MAXLINE, 0);
+        s_cli[id].status = 1;
 
     return 0;
 }
 
-void* chat_with_all_user(int id, char *buffer, char *temp) {
+void* chat_with_all_user(int id, char *buffer, char *buffer2, char *temp) {
     int len = strlen(buffer);
     subCadena(temp, buffer, 5, len-5);
     //Se envía a todos menos a él mismo y al que se haya ido
@@ -92,9 +105,22 @@ void* chat_with_all_user(int id, char *buffer, char *temp) {
     strcat(buffer, s_cli[id].user);
     strcat(buffer, " dice: ");
     strcat(buffer, temp);
+
+    //Se envia una notificacion que el usuario esta ocupado
+    bzero(buffer2, MAXLINE);
+    strcat(buffer2, "El usuario: ");
+    strcat(buffer2, s_cli[id].user);
+    strcat(buffer2, " se encuentra ocupado.");
+
     for(int i = 0; i < clients; i++)
-        if (i != id && s_cli[i].sign_in == 1)
+        if (i != id && s_cli[i].sign_in == 1 && s_cli[i].status == 0) {
             send(s_cli[i].socket, buffer, MAXLINE, 0);
+            //printf("busy: %d", s_cli[i].busy);
+        }
+        else {
+            send(s_cli[i].socket, buffer2, MAXLINE, 0);
+            printf("status: %d", s_cli[i].status);
+        }
     return 0;
 }
 
@@ -102,7 +128,7 @@ void* connection(void* d) {
     int *ide, id;
     ide = (int* ) d;
     id = *ide;
-    char buffer[MAXLINE], name[MAXLINE-4], temp[MAXLINE-8];
+    char buffer[MAXLINE], buffer2[MAXLINE], name[MAXLINE-4], temp[MAXLINE-8];
 
     while(1) {
         printf("\nid: %d\n", id);
@@ -110,6 +136,7 @@ void* connection(void* d) {
 
         if(strstr(buffer, "ADD") && s_cli[id].sign_in == 0) {
             add_client(id, buffer, name);
+            welcome(id, buffer, name);
         }
 
         if(strstr(buffer, "LIST") && s_cli[id].sign_in == 1) {
@@ -121,10 +148,10 @@ void* connection(void* d) {
         }
 
         if(strstr(buffer, "TEXT") && !strstr(buffer, "TEXT TO") && s_cli[id].sign_in == 1) {
-            chat_with_all_user(id, buffer, temp);
+            chat_with_all_user(id, buffer, buffer2, temp);
         }
 
-        if(strstr(buffer, "TEXT TO") && s_cli[id].sign_in == 1) {
+        if(strstr(buffer, "TEXT TO") && s_cli[id].sign_in == 1 && s_cli[id].status == 0) {
             chat_with_other_user(id, buffer, name, temp);
         }
         fflush(stdout);

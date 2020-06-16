@@ -17,6 +17,7 @@ void* connection(void* d);
 
 struct clients {
     int socket;
-    char user[MAXLINE-4];
+    char user[MAXLINE];
     int sign_in;
+    int status;
 } s_cli[NUM_CLIENTS];
