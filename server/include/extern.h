@@ -1,7 +1,3 @@
-//
-// Created by Maximiliano Perellón on 03/02/2020.
-//
-
 #ifndef DEFINEGLOBAL
 #define EXTERN_H
 #else

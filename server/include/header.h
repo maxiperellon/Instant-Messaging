@@ -1,4 +1,4 @@
-
+#include <mysql.h>
 #include <netdb.h> 
 #include <netinet/in.h> 
 #include <stdlib.h> 
@@ -17,6 +17,6 @@ void* connection(void* d);
 
 struct clients {
     int socket;
-    char user[MAXLINE-4];
+    char user[MAXLINE];
     int sign_in;
 } s_cli[NUM_CLIENTS];

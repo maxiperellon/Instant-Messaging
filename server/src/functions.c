@@ -1,6 +1,3 @@
-//
-// Created by Maximiliano Perellón on 28/01/2020.
-//
 #include "header.h"
 #include "extern.h"
 
@@ -64,7 +61,7 @@ void* end_chat(int id, char *buffer) {
     return 0;
 }
 
-void* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
+void* chat_with_other_user(int id, char *buffer, char *user, char *temp) {
     //Le quitamos el TEXT TO
     subCadena(name, buffer, 8, MAXLINE-8);
     //Nos quedamos sólo con el nombre, quitando desde el primer espacio en blanco hasta el final
@@ -80,6 +77,7 @@ void* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
     strcat(name, temp);
     if(destino != -1)
         send(destino, name, MAXLINE, 0);
+
 
     return 0;
 }
@@ -97,6 +95,52 @@ void* chat_with_all_user(int id, char *buffer, char *temp) {
             send(s_cli[i].socket, buffer, MAXLINE, 0);
     return 0;
 }
+
+/* FUNCIONES PARA LA BASE DE DATOS */
+
+
+/* Insertar un mensaje a la BD en la conversación actual */
+void insertar_msg(MYSQL *conn, int conv char *temp, char *buffer){
+    char consulta[512];
+    sprintf(consulta, "INSERT INTO `mensajes` (`id`, `conversacion_id`, `date`, `msg`) VALUES (NULL, '%d', '%s', '%s');", conv, temp, buffer);
+    if((mysql_query(conn, consulta)==0)){
+        printf("Se agrego un mensaje a la conversacion: %d \n", conv);
+
+    }else{
+        printf("Error no se pudo agregar el mensaje. %s \n", mysql_error(connection));
+    }
+}
+
+void insert_client(MYSQL *conn, char *name, char *temp){
+    char query[512];
+    sprintf(query, "INSERT INTO `users` (`id`, `name`, `date`) VALUES (NULL, '%s', '%s');", name, temp);
+    if((mysql_query(conn, query)==0)){
+        printf("Nuevo usuario agregado: %s \n", name);
+    }else{
+        printf("Usuario: %s \n", mysql_error(conn));
+    }
+
+}
+int found_name(MYSQL *conn, MYSQL_ROW row, MYSQL_RES *res, char *query, char *name){
+    char id_nick;
+    sprintf(query, "SELECT `id` FROM users where `name` like '%s' ORDER BY `id` desc limit 1;", name);
+    //hacemos consulta y verificamos que se cumple
+    if((mysql_query(conn, query) == 0)){
+        //guardamos resultado en la variable resultado que es de tipo MYSQL_RES *
+        res=mysql_store_result(conn);
+        //leemos los datos almacenados en resultado y lo devolvemos a la variable row que es de tipo MYSQL_ROW
+        while(row=mysql_fetch_row(res)){
+            return atoi(row[1]);
+        }
+    }
+
+    mysql_free_result(res);
+    //preguntamos si se ha llegado al final de nuestra variable resultado
+    if(!mysql_eof(res)){
+        printf("Error de lectura %s\n", mysql_error(conn));
+    }
+}
+
 
 void* connection(void* d) {
     int *ide, id;
