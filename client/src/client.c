@@ -8,6 +8,7 @@ int main(int argc, char *argv[]) {
     memset(&server_addr, 0, server_size);
     server_addr.sin_family = AF_INET; //tipo de conexión (por red o interna)
     server_addr.sin_port = htons(SERVER_PORT); //es el numero que le corresponde al puerto
+
     pthread_t send_thread, recv_thread;
 
     //CREACION DEL SOCKET
@@ -15,7 +16,7 @@ int main(int argc, char *argv[]) {
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
         perror("ERROR: error al crear el socket..\n");
-        exit(0);
+        return 1;
     }
     //connect solicita la conexion con el servidor. 0 --> establece la conexion si no larga error
     if (connect(sock, (struct sockaddr*)&server_addr, server_size) < 0) {
@@ -34,5 +35,5 @@ int main(int argc, char *argv[]) {
         pthread_join(recv_thread, NULL);
     }
     close(sock);
-    return 1;
+    return 0;
 }
