@@ -10,7 +10,7 @@ void* recv_msg(void* r) {
 
     while(1) {
         recv(*id, buffer, MAXLINE, 0);
-        printf("%s\n", buffer);
+        printf("holaa: %s\n", buffer);
         fflush(stdout);
         sleep(3);
     }
@@ -31,6 +31,6 @@ void* send_msg(void* s) {
         fgets(buffer, MAXLINE, stdin);
         strtok(buffer,"\n");
         send(*id, buffer, MAXLINE, 0);
-        sleep(3);
+        sleep(1);
     }
 }
