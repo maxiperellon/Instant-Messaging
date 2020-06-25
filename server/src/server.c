@@ -2,6 +2,7 @@
 #include "extern.h"
 
 int main(int argc, char *argv[]) {
+
     struct sockaddr_in server_addr;
     struct sockaddr_in cli_addr;
 
@@ -37,11 +38,9 @@ int main(int argc, char *argv[]) {
 
     puts("\t\nEsperando las conexiones...");
 
-    pthread_t thread[NUM_CLIENTS];
+    pthread_t thread;
 
-//    for(int i = 0; i < NUM_CLIENTS; i++)
-//        strcpy(s_cli[i].user, " ");
-
+    /*Aceptación de clientes*/
     while(1) {
         socklen_t cli_size = sizeof(cli_addr); /* Obtenemos el tamaño de la estructura en bytes (16)*/
 		int conn_accept = accept(socket_fd, (struct sockaddr*)&cli_addr, &cli_size);
@@ -53,17 +52,22 @@ int main(int argc, char *argv[]) {
 		    int id = clients;
 		    s_cli[id].socket = conn_accept;
 		    s_cli[id].sign_in = 0;
-            s_cli[id].status = 0;
-		    fflush(stdout);
+		    s_cli[id].status = 0;
 		    clients++;
-            if (pthread_create(&thread[id], NULL, connection, (void *)&id) < 0) {
+            if (pthread_create(&thread, NULL, connection, (void *)&id) < 0) {
                 perror("ERROR: error al crear el hilo...");
                 return 1;
             } else {
-                printf("Hilo del cliente creado correctamente, su id: %d", id);
+                if (clients <= NUM_CLIENTS){
+                    printf("Hilo del cliente creado correctamente, su id: %d", id);
+                } else {
+                    printf("Se supero la cantidad máxima de clientes..");
+                    close(conn_accept);
+                    continue;
+                }
+
             }
         }
+	    sleep(1);
     }
-    close(socket_fd);
-    return 0;
 }

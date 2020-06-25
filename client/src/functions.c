@@ -10,7 +10,7 @@ void* recv_msg(void* r) {
 
     while(1) {
         recv(*id, buffer, MAXLINE, 0);
-        printf("holaa: %s\n", buffer);
+        printf("%s\n", buffer);
         fflush(stdout);
         sleep(3);
     }
