@@ -1,6 +1,3 @@
-//
-// Created by Maximiliano Perellón on 31/01/2020.
-//
 #include "header.h"
 
 void* recv_msg(void* r) {

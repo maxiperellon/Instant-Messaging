@@ -1,6 +1,3 @@
-//
-// Created by Maximiliano Perellón on 25/06/2020.
-//
 
 #ifndef ERROR_H
 #define ERROR_H
