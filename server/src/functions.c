@@ -6,7 +6,7 @@ void* connection(void* d) {
     int *ide, id;
     ide = (int* ) d;
     id = *ide;
-    char buffer[MAXLINE], buffer2[MAXLINE], name[MAXLINE-4], temp[MAXLINE-8];
+    char buffer[MAXLINE], buffer2[MAXLINE], name[MAXLINE], temp[MAXLINE];
 
     /* Fecha y hora */
 
@@ -66,7 +66,7 @@ void cut_buff(char *sub_cad, char *cad, int init, int c) {
 
 int search_client(char* user) {
     for(int i = 0; i < clients; i++) {
-        if(strcmp(s_cli[i].user, user) == 0 && s_cli[i].sign_in == 1){
+        if(strcmp(s_cli[i].username, user) == 0 && s_cli[i].sign_in == 1){
             return s_cli[i].socket;
         }
     }
@@ -128,7 +128,7 @@ void* end_chat(int id, char *buffer) {
 }
 
 void* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
-    //Le quitamos el CHAT
+    //Le quitamos la cadena CHAT
     cut_buff(name, buffer, 5, MAXLINE-5);
     //Nos quedamos sólo con el nombre, quitando desde el primer espacio en blanco hasta el final
     strtok(name, " ");

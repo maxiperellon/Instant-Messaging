@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 void error_socket() {
-    printf("\n--> Error al crear el socket...\n");
+    perror("ERROR: error al crear el socket..\n");
     exit(1);
 }
 

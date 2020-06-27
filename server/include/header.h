@@ -26,7 +26,7 @@ void* chat_with_all_user(int id, char *buffer, char *buffer2, char *temp);
 
 struct clients {
     int socket;
-    char user[32];
+    char username[32];
     int sign_in;
     int status;
 } s_cli[NUM_CLIENTS];

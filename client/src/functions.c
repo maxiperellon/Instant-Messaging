@@ -22,7 +22,6 @@ void* send_msg(void* s) {
     printf("\tIntroduce ADD y tu nombre de usuario \n");
     printf("\tADD: 'Agrega tu nombre de usuario al servidor' \n");
 
-
     while(1) {
         printf("\t\n-> ");
         fgets(buffer, MAXLINE, stdin);

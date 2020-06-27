@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 	system("clear");
 	printf("\n");
 	printf("\tServidor CONECTADO...\n");
-    printf("\tPUERTO: %d\n\n", ntohs(server_addr.sin_port));
+    printf("\tPUERTO: %d\n\n", port);
 
     puts("\t\nEsperando las conexiones...");
 
@@ -64,6 +64,11 @@ int main(int argc, char *argv[]) {
 
             }
         }
-	    sleep(1);
+	    //sleep(1);
     }
+
+    close(socket_fd);
+    printf("SERVIDOR FINALIZADO..\n");
+
+    return 0;
 }
