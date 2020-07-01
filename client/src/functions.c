@@ -1,6 +1,3 @@
-//
-// Created by Maximiliano Perellón on 31/01/2020.
-//
 #include "header.h"
 
 void* recv_msg(void* r) {
@@ -10,7 +7,7 @@ void* recv_msg(void* r) {
 
     while(1) {
         recv(*id, buffer, MAXLINE, 0);
-        printf("holaa: %s\n", buffer);
+        printf("%s\n", buffer);
         fflush(stdout);
         sleep(3);
     }
@@ -24,7 +21,6 @@ void* send_msg(void* s) {
     printf("\n\t\t\t>>> BIENVENIDO AL CHAT <<<<\n\n");
     printf("\tIntroduce ADD y tu nombre de usuario \n");
     printf("\tADD: 'Agrega tu nombre de usuario al servidor' \n");
-
 
     while(1) {
         printf("\t\n-> ");

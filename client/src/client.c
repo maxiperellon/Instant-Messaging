@@ -1,4 +1,5 @@
 #include "header.h"
+#include "error.h"
 
 int main(int argc, char *argv[]) {
 
@@ -15,21 +16,17 @@ int main(int argc, char *argv[]) {
 
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
-        perror("ERROR: error al crear el socket..\n");
-        return 1;
+        error_socket();
     }
     //connect solicita la conexion con el servidor. 0 --> establece la conexion si no larga error
     if (connect(sock, (struct sockaddr*)&server_addr, server_size) < 0) {
-        perror("ERROR: error al conectar con el servidor..\n");
-        exit(0);
+        error_connect_server();
     } else {
         if (pthread_create(&send_thread, NULL, send_msg, (void*)&sock) < 0) {
-            perror("ERROR: error al crear el hilo para enviar..");
-            exit(0);
+            error_send_thread_create();
         }
         if (pthread_create(&recv_thread, NULL, recv_msg, (void*)&sock) < 0) {
-            perror("ERROR: error al crear el hilo para recibir..");
-            exit(0);
+            error_recv_thread_create();
         }
         pthread_join(send_thread, NULL);
         pthread_join(recv_thread, NULL);
