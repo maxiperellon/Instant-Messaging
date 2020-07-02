@@ -1,7 +1,7 @@
 #include "header.h"
 #include "extern.h"
 #include "error.h"
-#include "database.h"
+//#include "config_database.h"
 
 int main(int argc, char *argv[]) {
 
@@ -9,17 +9,20 @@ int main(int argc, char *argv[]) {
     MYSQL_RES *res; /* variable que contendra el resultado de la consuta */
     MYSQL_ROW row; /* variable que contendra los campos por cada registro consultado */
     conn = mysql_init(NULL); /*inicializacion a nula la conexión */
-
+    char *SERVER = "localhost"; /*direccion del servidor 127.0.0.1, localhost o direccion ip */
+    char *USER = "root"; /*usuario para consultar la base de datos */
+    char *PASSWORD = "root"; /* contraseña para el usuario en cuestion */
+    char *DATABASE = "chat";
     /* conectar a la base de datos */
     if (!mysql_real_connect(conn, SERVER, USER, PASSWORD, DATABASE, 0, NULL, 0)) { /* definir los parámetros de la conexión antes establecidos */
         fprintf(stderr, "%s\n", mysql_error(conn)); /* si hay un error definir cual fue dicho error */
         exit(1);
     } else {
-        printf("Base de datos conectada...")
+        printf("Base de datos conectada...");
     }
 
     /* enviar consulta SQL */
-    if (mysql_query(conn, "select * from datos")) { /* definicion de la consulta y el origen de la conexion */
+    if (mysql_query(conn, "show tables")) { /* definicion de la consulta y el origen de la conexion */
         fprintf(stderr, "%s\n", mysql_error(conn));
         exit(1);
     }

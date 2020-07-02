@@ -10,6 +10,7 @@
 #include <pthread.h>
 #include <mysql/mysql.h>
 
+
 #define SERVER_PORT 8000
 #define NUM_CLIENTS 10
 #define MAXLINE 512
