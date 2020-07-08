@@ -1,7 +1,7 @@
 #include "header.h"
 #include "extern.h"
 #include "error.h"
-//#include "config_database.h"
+#include "config_database.h"
 
 int main(int argc, char *argv[]) {
 
@@ -9,16 +9,16 @@ int main(int argc, char *argv[]) {
     MYSQL_RES *res; /* variable que contendra el resultado de la consuta */
     MYSQL_ROW row; /* variable que contendra los campos por cada registro consultado */
     conn = mysql_init(NULL); /*inicializacion a nula la conexión */
-    char *SERVER = "localhost"; /*direccion del servidor 127.0.0.1, localhost o direccion ip */
-    char *USER = "root"; /*usuario para consultar la base de datos */
-    char *PASSWORD = "root"; /* contraseña para el usuario en cuestion */
-    char *DATABASE = "chat";
+
     /* conectar a la base de datos */
     if (!mysql_real_connect(conn, SERVER, USER, PASSWORD, DATABASE, 0, NULL, 0)) { /* definir los parámetros de la conexión antes establecidos */
         fprintf(stderr, "%s\n", mysql_error(conn)); /* si hay un error definir cual fue dicho error */
         exit(1);
     } else {
-        printf("Base de datos conectada...");
+        system("clear");
+        printf("###################################");
+        printf("\n\tBase de datos conectada...");
+        printf("\n###################################\n");
     }
 
     /* enviar consulta SQL */
@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
     }
 
     res = mysql_use_result(conn);
-    printf("ID\tNombre\t\tedad\n");
+    printf("\nID\tNombre\t\tedad\n");
     while ((row = mysql_fetch_row(res)) != NULL) /* recorrer la variable res con todos los registros obtenidos para su uso */
         printf("%s\t%s\t%s \n", row[0],row[1],row[2]); /* la variable row se convierte en un arreglo por el numero de campos que hay en la tabla */
 
@@ -60,12 +60,13 @@ int main(int argc, char *argv[]) {
 	if (listen(socket_fd, NUM_CLIENTS) < 0) { /* Comprobamos si se puso a la escucha el puerto local */
         error_listen(port);
 	}
-	
-	system("clear");
-	printf("\n");
+
+    printf("\n");
+    printf("\n###################################\n");
+    printf("\n");
 	printf("\tServidor CONECTADO...\n");
     printf("\tPUERTO: %d\n\n", port);
-
+    printf("###################################\n");
     puts("\t\nEsperando las conexiones...");
 
     pthread_t thread;
