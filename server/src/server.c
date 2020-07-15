@@ -28,9 +28,9 @@ int main(int argc, char *argv[]) {
     }
 
     res = mysql_use_result(conn);
-    printf("\nID\tNombre\t\tedad\n");
+
     while ((row = mysql_fetch_row(res)) != NULL) /* recorrer la variable res con todos los registros obtenidos para su uso */
-        printf("%s\t%s\t%s \n", row[0],row[1],row[2]); /* la variable row se convierte en un arreglo por el numero de campos que hay en la tabla */
+        printf("%s\t\n", row[0]); /* la variable row se convierte en un arreglo por el numero de campos que hay en la tabla */
 
     /* se libera la variable res y se cierra la conexión */
     mysql_free_result(res);
