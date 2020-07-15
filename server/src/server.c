@@ -61,9 +61,7 @@ int main(int argc, char *argv[]) {
         error_listen(port);
 	}
 
-    printf("\n");
-    printf("\n###################################\n");
-    printf("\n");
+    printf("\n\n###################################\n\n");
 	printf("\tServidor CONECTADO...\n");
     printf("\tPUERTO: %d\n\n", port);
     printf("###################################\n");
