@@ -5,9 +5,6 @@
 
 int main(int argc, char *argv[]) {
 
-    MYSQL *conn; /* variable de conexión para MySQL */
-    MYSQL_RES *res; /* variable que contendra el resultado de la consuta */
-    MYSQL_ROW row; /* variable que contendra los campos por cada registro consultado */
     conn = mysql_init(NULL); /*inicializacion a nula la conexión */
 
     /* conectar a la base de datos */
