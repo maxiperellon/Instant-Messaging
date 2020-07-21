@@ -13,7 +13,7 @@ OBJ=$(ODIR)/$(_OBJ)
 DEPS=$(IDIR)/$(_DEPS)
 
 server:	$(OBJ)
-	$(CC) -o $(BDIR)/$(APP) $(OBJ) -lpthread
+	$(CC) -o $(BDIR)/$(APP) $(OBJ) `mysql_config --cflags` `mysql_config --libs` -lpthread
 
 $(ODIR)/%.o:	%.c $(DEPS)
 	$(CC) -c -o $@ $< $(CFLAGS)

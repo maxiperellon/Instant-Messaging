@@ -1,4 +1,3 @@
-
 #include "header.h"
 #include "extern.h"
 
@@ -8,20 +7,18 @@ void* connection(void* d) {
     id = *ide;
     char buffer[MAXLINE], buffer2[MAXLINE], name[MAXLINE], temp[MAXLINE];
 
-    /* Fecha y hora */
+    /*------------- Fecha y hora ------------ */
 
     time_t t;
     struct tm *tm, *tm1;
-    char fecha[100], hora[50];
+    char date[100], hour[50];
     t=time(NULL);
     tm=localtime(&t);
     tm1=localtime(&t);
-    strftime(fecha, 100, "%d/%m/%Y", tm);
-    strftime(hora, 100, "%H:%M", tm1);
+    strftime(date, 100, "%d/%m/%Y", tm);
+    strftime(hour, 100, "%H:%M", tm1);
 
-    /* -------------------------------- */
-
-    s_cli[id].status = 0;
+    /* -------------------------------------- */
 
     while(1) {
         printf("\nid: %d\n", id);

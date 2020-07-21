@@ -1,8 +1,37 @@
 #include "header.h"
 #include "extern.h"
 #include "error.h"
+#include "config_database.h"
 
 int main(int argc, char *argv[]) {
+
+    conn = mysql_init(NULL); /*inicializacion a nula la conexión */
+
+    /* conectar a la base de datos */
+    if (!mysql_real_connect(conn, SERVER, USER, PASSWORD, DATABASE, 0, NULL, 0)) { /* definir los parámetros de la conexión antes establecidos */
+        fprintf(stderr, "%s\n", mysql_error(conn)); /* si hay un error definir cual fue dicho error */
+        exit(1);
+    } else {
+        system("clear");
+        printf("###################################");
+        printf("\n\tBase de datos conectada...");
+        printf("\n###################################\n");
+    }
+
+    /* enviar consulta SQL */
+    if (mysql_query(conn, "show tables")) { /* definicion de la consulta y el origen de la conexion */
+        fprintf(stderr, "%s\n", mysql_error(conn));
+        exit(1);
+    }
+
+    res = mysql_use_result(conn);
+
+    while ((row = mysql_fetch_row(res)) != NULL) /* recorrer la variable res con todos los registros obtenidos para su uso */
+        printf("%s\t\n", row[0]); /* la variable row se convierte en un arreglo por el numero de campos que hay en la tabla */
+
+    /* se libera la variable res y se cierra la conexión */
+    mysql_free_result(res);
+    mysql_close(conn);
 
     struct sockaddr_in server_addr;
     struct sockaddr_in cli_addr;
@@ -28,12 +57,11 @@ int main(int argc, char *argv[]) {
 	if (listen(socket_fd, NUM_CLIENTS) < 0) { /* Comprobamos si se puso a la escucha el puerto local */
         error_listen(port);
 	}
-	
-	system("clear");
-	printf("\n");
+
+    printf("\n\n###################################\n\n");
 	printf("\tServidor CONECTADO...\n");
     printf("\tPUERTO: %d\n\n", port);
-
+    printf("###################################\n");
     puts("\t\nEsperando las conexiones...");
 
     pthread_t thread;
