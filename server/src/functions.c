@@ -155,8 +155,8 @@ void* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
         send(sock_destination, name, MAXLINE, 0);
         s_cli[id].status = 1;
         s_cli[id_destination].status = 1;
-        printf("user1: '%s' user2: '%s'", s_cli[id].username, s_cli[id_destination].username);
-        //insert_data(conn, date, s_cli[id].username, s_cli[id_destination].username):
+        //printf("user1: '%s' user2: '%s'", s_cli[id].username, s_cli[id_destination].username);
+        insert_data(conn, date, s_cli[id].username, s_cli[id_destination].username, temp);
         } else {
         char *msg = "El usuario con en el que desea chatear no se encuentra en la sala.";
         send(s_cli[id].socket, msg, MAXLINE, 0);

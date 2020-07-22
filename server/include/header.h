@@ -30,8 +30,7 @@ MYSQL *conn; /* variable de conexión para MySQL */
 MYSQL_RES *res; /* variable que contendra el resultado de la consuta */
 MYSQL_ROW row; /* variable que contendra los campos por cada registro consultado */
 
-void insert_data(MYSQL *conn, char *date, char *username1, char *username2);
-void insert_conversation(MYSQL *conn, int conv, char date, char msg);
+void insert_data(MYSQL *conn, char *date, char *username1, char *username2, char *msg);
 
 /* -----------------------------------DATABASE-------------------------------------- */
 
