@@ -75,6 +75,7 @@ int main(int argc, char *argv[]) {
             error_conn_accept();
 		} else {
 		    int id = clients;
+            s_cli[id].id_client = id;
 		    s_cli[id].socket = conn_accept;
 		    s_cli[id].sign_in = 0;
 		    s_cli[id].status = 0;

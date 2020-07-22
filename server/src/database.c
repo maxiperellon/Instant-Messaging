@@ -1,13 +1,12 @@
 #include "header.h"
-#include "config_database.h"
 
 /* FUNCIONES PARA LA BASE DE DATOS */
 
 /* Insertar datos de la conversacion a la base de BD */
 
-void insert_data(MYSQL *conn, char date, char username1, char username2){
+void insert_data(MYSQL *conn, char *date, char *username1, char *username2){
     char query[512];
-    sprintf(consulta, "INSERT INTO `data` (`id_data`, `date`, `user1`, `user2`) VALUES (NULL, '%s', '%s', '%s');", date, name1, name2);
+    sprintf(query, "INSERT INTO `data` (`id_data`, `date`, `user1`, `user2`) VALUES (NULL, '%s', '%s', '%s');", date, username1, username2);
     if((mysql_query(conn, query)==0)){
     	printf("Se agregaron los datos de la conversacion a la BD \n");
 
@@ -16,7 +15,7 @@ void insert_data(MYSQL *conn, char date, char username1, char username2){
     }
 }
 
-/* Insertar un mensaje a la BD en la conversación actual */
+/* Insertar un mensaje a la BD en la conversación actual */ /*
 
 void insert_conversation(MYSQL *conn, int conv, char date, char msg){
     char query[512];
@@ -30,7 +29,7 @@ void insert_conversation(MYSQL *conn, int conv, char date, char msg){
 }
 
 
-/* Obtener el ID de la última conversación */
+/* Obtener el ID de la última conversación */ /*
 int search_id_data_conversation(MYSQL *conn, MYSQL_ROW row, MYSQL_RES *res, char *query_db){
     //concatena las constantes a la variable consulta
     sprintf(query_db, "SELECT  * FROM `data` ORDER BY `id_data` DESC LIMIT 1");
