@@ -7,19 +7,6 @@ void* connection(void* d) {
     id = *ide;
     char buffer[MAXLINE], buffer2[MAXLINE], name[MAXLINE], temp[MAXLINE];
 
-    /*------------- Fecha y hora ------------ */
-
-    time_t t;
-    struct tm *tm, *tm1;
-    char date[100], hour[50];
-    t=time(NULL);
-    tm=localtime(&t);
-    tm1=localtime(&t);
-    strftime(date, 100, "%d/%m/%Y", tm);
-    strftime(hour, 100, "%H:%M", tm1);
-
-    /* -------------------------------------- */
-
     while(1) {
         printf("\nid: %d\n", id);
         recv(s_cli[id].socket, buffer, MAXLINE,0);
@@ -61,10 +48,19 @@ void cut_buff(char *sub_cad, char *cad, int init, int c) {
     sub_cad[j]='\0';
 }
 
-int search_client(char* user) {
+int search_socket_client(char* user) {
     for(int i = 0; i < clients; i++) {
         if(strcmp(s_cli[i].username, user) == 0 && s_cli[i].sign_in == 1){
             return s_cli[i].socket;
+        }
+    }
+    return 0;
+}
+
+int search_id_client(char* user) {
+    for(int i = 0; i < clients; i++) {
+        if(strcmp(s_cli[i].username, user) == 0 && s_cli[i].sign_in == 1){
+            return s_cli[i].id_client;
         }
     }
     return 0;
@@ -125,24 +121,43 @@ void* end_chat(int id, char *buffer) {
 }
 
 void* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
+
+    /*------------- Fecha y hora ------------ */
+    time_t t;
+    struct tm *tm, *tm1;
+    char date[100], hour[50];
+    t=time(NULL);
+    tm=localtime(&t);
+    tm1=localtime(&t);
+    strftime(date, 100, "%d/%m/%Y", tm);
+    strftime(hour, 100, "%H:%M", tm1);
+    /* -------------------------------------- */
+
     //Le quitamos la cadena CHAT
     cut_buff(name, buffer, 5, MAXLINE-5);
     //Nos quedamos sólo con el nombre, quitando desde el primer espacio en blanco hasta el final
     strtok(name, " ");
     //Se obtiene el socket destino
-    int sock_destination = search_client(name);
+    int sock_destination = search_socket_client(name);
+    int id_destination = search_id_client(name);
     int len=strlen(name);
-    strcpy(name, s_cli[id].username);
+    strcpy(name, date);
+    strcat(name, " - ");
+    strcat(name, hour);
+    strcat(name, " - ");
+    strcat(name, s_cli[id].username);
     strcat(name, ": ");
     //Recortamos el CHAT, el nombre, y los dos espacios hasta el mensaje(se suma solo uno (un espacio)
     cut_buff(temp, buffer, 5+len+1, MAXLINE-(5+len+1));
     strcat(name, temp); // se envia el mensaje completo con el nick del usuario
 
-    if (sock_destination != 0){
+    if (sock_destination != 0 && id_destination != -1){
         send(sock_destination, name, MAXLINE, 0);
         s_cli[id].status = 1;
-        s_cli[sock_destination].status = 1;
-    } else {
+        s_cli[id_destination].status = 1;
+        printf("user1: '%s' user2: '%s'", s_cli[id].username, s_cli[id_destination].username);
+        //insert_data(conn, date, s_cli[id].username, s_cli[id_destination].username):
+        } else {
         char *msg = "El usuario con en el que desea chatear no se encuentra en la sala.";
         send(s_cli[id].socket, msg, MAXLINE, 0);
     }
