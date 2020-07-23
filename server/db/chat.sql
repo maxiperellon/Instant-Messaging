@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.30, for Linux (x86_64)
 --
--- Host: 127.0.0.1    Database: instant_messaging
+-- Host: 127.0.0.1    Database: chat
 -- ------------------------------------------------------
 -- Server version	5.7.30-0ubuntu0.18.04.1
 
@@ -16,33 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `conversation`
---
-
-DROP TABLE IF EXISTS `conversation`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `conversation` (
-  `id_conversation` int(11) NOT NULL AUTO_INCREMENT,
-  `date` varchar(100) NOT NULL,
-  `msg` varchar(45) NOT NULL,
-  `data_id` int(11) NOT NULL,
-  PRIMARY KEY (`id_conversation`),
-  KEY `fk_conversation_1_idx` (`data_id`),
-  CONSTRAINT `fk_conversation_1` FOREIGN KEY (`data_id`) REFERENCES `data` (`id_data`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `conversation`
---
-
-LOCK TABLES `conversation` WRITE;
-/*!40000 ALTER TABLE `conversation` DISABLE KEYS */;
-/*!40000 ALTER TABLE `conversation` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `data`
 --
 
@@ -54,6 +27,7 @@ CREATE TABLE `data` (
   `date` varchar(100) NOT NULL,
   `user1` varchar(45) NOT NULL,
   `user2` varchar(45) NOT NULL,
+  `msg` varchar(512) NOT NULL,
   PRIMARY KEY (`id_data`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -76,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-07-15 17:32:43
+-- Dump completed on 2020-07-22 19:36:24
