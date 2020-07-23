@@ -24,10 +24,6 @@ void* connection(void* d) {
             chat_with_other_user(id, buffer, name, temp);
         }
 
-        /* if(strstr(buffer, "TEXT") && !strstr(buffer, "CHAT") && s_cli[id].sign_in == 1) {
-           chat_with_all_user(id, buffer, buffer2, temp);
-       }*/
-
         if(strstr(buffer, "BYE") && s_cli[id].sign_in == 1) {
             end_chat(id, buffer);
         }
@@ -140,10 +136,15 @@ void* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
     //Se obtiene el socket destino
     int sock_destination = search_socket_client(name);
     int id_destination = search_id_client(name);
+
+    char time[1000];
+    strcat(time, date);
+    strcat(time, "  ");
+    strcat(time, hour);
+
     int len=strlen(name);
-    strcpy(name, date);
-    strcat(name, " - ");
-    strcat(name, hour);
+
+    strcat(name, time);
     strcat(name, " - ");
     strcat(name, s_cli[id].username);
     strcat(name, ": ");
@@ -155,39 +156,14 @@ void* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
         send(sock_destination, name, MAXLINE, 0);
         s_cli[id].status = 1;
         s_cli[id_destination].status = 1;
-        //printf("user1: '%s' user2: '%s'", s_cli[id].username, s_cli[id_destination].username);
-        insert_data(conn, date, s_cli[id].username, s_cli[id_destination].username, temp);
-        } else {
+
+        //Se insertan los valores a la base de datos
+        insert_data(conn, time, s_cli[id].username, s_cli[id_destination].username, temp);
+
+    } else {
         char *msg = "El usuario con en el que desea chatear no se encuentra en la sala.";
         send(s_cli[id].socket, msg, MAXLINE, 0);
     }
 
     return 0;
 }
-
-/*
-void* chat_with_all_user(int id, char *buffer, char *buffer2, char *temp) {
-    int len = strlen(buffer);
-    cut_buff(temp, buffer, 5, len-5);
-    //Se envía a todos menos a él mismo y al que se haya ido
-    bzero(buffer, MAXLINE);
-    strcat(buffer, s_cli[id].user);
-    strcat(buffer, " dice: ");
-    strcat(buffer, temp);
-
-    //Se envia una notificacion que el usuario esta ocupado
-    bzero(buffer2, MAXLINE);
-    strcat(buffer2, "El usuario: ");
-    strcat(buffer2, s_cli[id].user);
-    strcat(buffer2, " se encuentra ocupado.");
-
-    for(int i = 0; i < clients; i++)
-        if (i != id && s_cli[i].sign_in == 1 && s_cli[i].status == 0) {
-            send(s_cli[i].socket, buffer, MAXLINE, 0);
-        }
-        else {
-            send(s_cli[i].socket, buffer2, MAXLINE, 0);
-            printf("status: %d", s_cli[i].status);
-        }
-    return 0;
-}*/

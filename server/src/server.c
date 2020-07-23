@@ -29,9 +29,8 @@ int main(int argc, char *argv[]) {
     while ((row = mysql_fetch_row(res)) != NULL) /* recorrer la variable res con todos los registros obtenidos para su uso */
         printf("%s\t\n", row[0]); /* la variable row se convierte en un arreglo por el numero de campos que hay en la tabla */
 
-    /* se libera la variable res y se cierra la conexión */
+    /* se libera la variable res */
     mysql_free_result(res);
-    mysql_close(conn);
 
     struct sockaddr_in server_addr;
     struct sockaddr_in cli_addr;
