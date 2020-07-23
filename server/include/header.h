@@ -34,6 +34,12 @@ void insert_data(MYSQL *conn, char *date, char *username1, char *username2, char
 
 /* -----------------------------------DATABASE-------------------------------------- */
 
+/* -------------------------------------LOG----------------------------------------- */
+
+char* save_in_log(char *date, char *username1, char *username2, char *msg);
+
+/* -------------------------------------LOG----------------------------------------- */
+
 struct clients {
     int id_client;
     int socket;
