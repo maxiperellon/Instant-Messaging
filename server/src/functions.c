@@ -138,13 +138,13 @@ void* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
     int id_destination = search_id_client(name);
 
     char time[1000];
-    strcat(time, date);
+    strcpy(time, date);
     strcat(time, "  ");
     strcat(time, hour);
 
     int len=strlen(name);
 
-    strcat(name, time);
+    strcpy(name, time);
     strcat(name, " - ");
     strcat(name, s_cli[id].username);
     strcat(name, ": ");
@@ -160,10 +160,34 @@ void* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
         //Se insertan los valores a la base de datos
         insert_data(conn, time, s_cli[id].username, s_cli[id_destination].username, temp);
 
+        //Se guardan los datos en el log
+        save_in_log(time, s_cli[id].username, s_cli[id_destination].username, temp);
+
     } else {
         char *msg = "El usuario con en el que desea chatear no se encuentra en la sala.";
         send(s_cli[id].socket, msg, MAXLINE, 0);
     }
+
+    return 0;
+}
+
+char* save_in_log(char *date, char *username1, char *username2, char *msg){
+    char string[128];
+
+    FILE *fp;
+    fp = fopen("chat.txt", "a+");
+
+    strcpy(string, date);
+    strcat(string," - user1: ");
+    strcat(string, username1);
+    strcat(string," - user2: ");
+    strcat(string, username2);
+    strcat(string," - mensaje: ");
+    strcat(string, msg);
+    strcat(string,"\n");
+    fputs(string, fp);
+
+    fclose(fp);
 
     return 0;
 }
