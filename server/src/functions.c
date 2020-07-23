@@ -175,7 +175,7 @@ char* save_in_log(char *date, char *username1, char *username2, char *msg){
     char string[128];
 
     FILE *fp;
-    fp = fopen("chat.txt", "a+");
+    fp = fopen("chat.log", "a+");
 
     strcpy(string, date);
     strcat(string," - user1: ");
