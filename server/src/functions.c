@@ -44,25 +44,21 @@ void cut_buff(char *sub_cad, char *cad, int init, int c) {
     sub_cad[j]='\0';
 }
 
-int search_socket_client(char* user) {
+int search_client_by_name(char* name) {
     for(int i = 0; i < clients; i++) {
-        if(strcmp(s_cli[i].username, user) == 0 && s_cli[i].sign_in == 1){
-            return s_cli[i].socket;
+        if(strcmp(s_cli[i].username, name) == 0) {
+            if (s_cli[i].sign_in == 1) {
+                return i;
+            }
+            else {
+                return -1;
+            }
         }
     }
-    return 0;
+    return -1;
 }
 
-int search_id_client(char* user) {
-    for(int i = 0; i < clients; i++) {
-        if(strcmp(s_cli[i].username, user) == 0 && s_cli[i].sign_in == 1){
-            return s_cli[i].id_client;
-        }
-    }
-    return 0;
-}
-
-void* welcome(int id, char *buffer) {
+int* welcome(int id, char *buffer) {
     strcpy(buffer, "\tHola ");
     strcat(buffer, s_cli[id].username);
     strcat(buffer, "!!!");
@@ -73,7 +69,7 @@ void* welcome(int id, char *buffer) {
     return 0;
 }
 
-void* add_client(int id, char *buffer, char *name) {
+int* add_client(int id, char *buffer, char *name) {
     int len = strlen(buffer);
     //Le quitamos el ADD
     cut_buff(name, buffer, 4, len-4);
@@ -91,7 +87,7 @@ void* add_client(int id, char *buffer, char *name) {
     return 0;
 }
 
-void* client_list(int id) {
+int* client_list(int id) {
     //Se envia al cliente todos los usuarios menos los que hayan abandonado la sesión y el de el propio
     for(int i = 0; i < clients; i++) {
         if(i != id && s_cli[i].sign_in == 1 && s_cli[i].status == 0) {
@@ -101,7 +97,7 @@ void* client_list(int id) {
     return 0;
 }
 
-void* end_chat(int id, char *buffer) {
+int* end_chat(int id, char *buffer) {
     //Se informa a todos menos a él mismo y al que se haya ido
     strcpy(buffer, "El usuario ");
     strcat(buffer, s_cli[id].username);
@@ -116,7 +112,7 @@ void* end_chat(int id, char *buffer) {
     return 0;
 }
 
-void* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
+int* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
 
     /*------------- Fecha y hora ------------ */
     time_t t;
@@ -126,16 +122,34 @@ void* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
     tm=localtime(&t);
     tm1=localtime(&t);
     strftime(date, 100, "%d/%m/%Y", tm);
-    strftime(hour, 100, "%H:%M", tm1);
+    strftime(hour, 100, "%H:%M:%S", tm1);
     /* -------------------------------------- */
 
     //Le quitamos la cadena CHAT
     cut_buff(name, buffer, 5, MAXLINE-5);
     //Nos quedamos sólo con el nombre, quitando desde el primer espacio en blanco hasta el final
     strtok(name, " ");
-    //Se obtiene el socket destino
-    int sock_destination = search_socket_client(name);
-    int id_destination = search_id_client(name);
+    //Obtenemos el índice del cliente destino
+    int id_destination = search_client_by_name(name);
+
+    if (id_destination < 0 || id_destination > clients - 1) {
+        return -1;
+    }
+
+    // Chequeamos si el usuario esta busy o idle
+    if (s_cli[id_destination].status == 1) {
+        char *msg = "El usuario con en el que desea chatear se encuentra ocupado.";
+        send(s_cli[id].socket, msg, MAXLINE, 0);
+        return -2;
+    }
+
+    // Podemos chequear si el socket del cliente es válido.
+    if (s_cli[id_destination].socket == 0) {
+        // Socket inválido.
+        char *msg = "El usuario con en el que desea chatear no se encuentra en la sala.";
+        send(s_cli[id].socket, msg, MAXLINE, 0);
+        return -3;
+    }
 
     char time[1000];
     strcpy(time, date);
@@ -148,30 +162,25 @@ void* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
     strcat(name, " - ");
     strcat(name, s_cli[id].username);
     strcat(name, ": ");
+
     //Recortamos el CHAT, el nombre, y los dos espacios hasta el mensaje(se suma solo uno (un espacio)
     cut_buff(temp, buffer, 5+len+1, MAXLINE-(5+len+1));
     strcat(name, temp); // se envia el mensaje completo con el nick del usuario
 
-    if (sock_destination != 0 && id_destination != -1){
-        send(sock_destination, name, MAXLINE, 0);
-        s_cli[id].status = 1;
-        s_cli[id_destination].status = 1;
+    send(s_cli[id_destination].socket, name, MAXLINE, 0);
+    s_cli[id].status = 1;
+    s_cli[id_destination].status = 1;
 
-        //Se insertan los valores a la base de datos
-        insert_data(conn, time, s_cli[id].username, s_cli[id_destination].username, temp);
+    //Se insertan los valores a la base de datos
+    insert_data(conn, time, s_cli[id].username, s_cli[id_destination].username, temp);
 
-        //Se guardan los datos en el log
-        save_in_log(time, s_cli[id].username, s_cli[id_destination].username, temp);
-
-    } else {
-        char *msg = "El usuario con en el que desea chatear no se encuentra en la sala.";
-        send(s_cli[id].socket, msg, MAXLINE, 0);
-    }
+    //Se guardan los datos en el log
+    save_to_log(time, s_cli[id].username, s_cli[id_destination].username, temp);
 
     return 0;
 }
 
-char* save_in_log(char *date, char *username1, char *username2, char *msg){
+int* save_to_log(char *date, char *username1, char *username2, char *msg){
     char string[128];
 
     FILE *fp;
@@ -182,7 +191,7 @@ char* save_in_log(char *date, char *username1, char *username2, char *msg){
     strcat(string, username1);
     strcat(string," - user2: ");
     strcat(string, username2);
-    strcat(string," - mensaje: ");
+    strcat(string," - message: ");
     strcat(string, msg);
     strcat(string,"\n");
     fputs(string, fp);

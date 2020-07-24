@@ -13,16 +13,16 @@
 #define SERVER_PORT 8000
 #define NUM_CLIENTS 10
 #define MAXLINE 512
+#define MAX_NAME_LEN 32
 
 void* connection(void* d);
-void cut_buff(char *subCad, char *cad, int inicio, int cuantos);
-int search_client(char* user);
-void* welcome(int id, char *buffer);
-void* add_client(int id, char *buffer, char *name);
-void* client_list(int id);
-void* end_chat(int id, char *buffer);
-void* chat_with_other_user(int id, char *buffer, char *name, char *temp);
-void* chat_with_all_user(int id, char *buffer, char *buffer2, char *temp);
+void cut_buff(char *subCad, char *cad, int init, int c);
+int search_client_by_name(char* name);
+int* welcome(int id, char *buffer);
+int* add_client(int id, char *buffer, char *name);
+int* client_list(int id);
+int* end_chat(int id, char *buffer);
+int* chat_with_other_user(int id, char *buffer, char *name, char *temp);
 
 /* -----------------------------------DATABASE-------------------------------------- */
 
@@ -36,14 +36,23 @@ void insert_data(MYSQL *conn, char *date, char *username1, char *username2, char
 
 /* -------------------------------------LOG----------------------------------------- */
 
-char* save_in_log(char *date, char *username1, char *username2, char *msg);
+typedef struct _message {
+    time_t date;
+    char username1[MAX_NAME_LEN];
+    char username2[MAX_NAME_LEN];
+    char buffer[MAXLINE];
+}message;
+
+int* save_to_log(char *date, char *username1, char *username2, char *msg);
 
 /* -------------------------------------LOG----------------------------------------- */
 
-struct clients {
+typedef struct _client {
     int id_client;
     int socket;
-    char username[32];
+    char username[MAX_NAME_LEN];
     int sign_in;
     int status;
-} s_cli[NUM_CLIENTS];
+}client;
+
+client s_cli[NUM_CLIENTS];
