@@ -13,9 +13,8 @@ int main(int argc, char *argv[]) {
         exit(1);
     } else {
         system("clear");
-        printf("###################################");
-        printf("\n\tBase de datos conectada...");
-        printf("\n###################################\n");
+        printf("##########################################\n");
+        printf("\n\tBase de datos conectada...\n");
     }
 
     /* enviar consulta SQL */
@@ -27,7 +26,8 @@ int main(int argc, char *argv[]) {
     res = mysql_use_result(conn);
 
     while ((row = mysql_fetch_row(res)) != NULL) /* recorrer la variable res con todos los registros obtenidos para su uso */
-        printf("%s\t\n", row[0]); /* la variable row se convierte en un arreglo por el numero de campos que hay en la tabla */
+        printf("\nTable: '%s'\n", row[0]); /* la variable row se convierte en un arreglo por el numero de campos que hay en la tabla */
+        printf("\n##########################################\n");
 
     /* se libera la variable res */
     mysql_free_result(res);
@@ -57,10 +57,10 @@ int main(int argc, char *argv[]) {
         error_listen(port);
 	}
 
-    printf("\n\n###################################\n\n");
+    printf("\n##########################################\n\n");
 	printf("\tServidor CONECTADO...\n");
     printf("\tPUERTO: %d\n\n", port);
-    printf("###################################\n");
+    printf("##########################################\n");
     puts("\t\nEsperando las conexiones...");
 
     pthread_t thread;

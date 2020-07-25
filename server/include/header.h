@@ -10,9 +10,9 @@
 #include <mysql/mysql.h>
 #include <time.h>
 
-#define SERVER_PORT 8000
+#define SERVER_PORT 8001
 #define NUM_CLIENTS 10
-#define MAXLINE 512
+#define MAX_LINE_LEN 512
 #define MAX_NAME_LEN 32
 
 void* connection(void* d);
@@ -40,8 +40,8 @@ typedef struct _message {
     time_t date;
     char username1[MAX_NAME_LEN];
     char username2[MAX_NAME_LEN];
-    char buffer[MAXLINE];
-}message;
+    char buffer[MAX_LINE_LEN];
+} message;
 
 int* save_to_log(char *date, char *username1, char *username2, char *msg);
 
@@ -53,6 +53,6 @@ typedef struct _client {
     char username[MAX_NAME_LEN];
     int sign_in;
     int status;
-}client;
+} client;
 
 client s_cli[NUM_CLIENTS];

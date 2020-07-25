@@ -5,11 +5,11 @@ void* connection(void* d) {
     int *ide, id;
     ide = (int* ) d;
     id = *ide;
-    char buffer[MAXLINE], buffer2[MAXLINE], name[MAXLINE], temp[MAXLINE];
+    char buffer[MAX_LINE_LEN], buffer2[MAX_LINE_LEN], name[MAX_LINE_LEN], temp[MAX_LINE_LEN];
 
     while(1) {
         printf("\nid: %d\n", id);
-        recv(s_cli[id].socket, buffer, MAXLINE,0);
+        recv(s_cli[id].socket, buffer, MAX_LINE_LEN,0);
 
         if(strstr(buffer, "ADD") && s_cli[id].sign_in == 0) {
             add_client(id, buffer, name);
@@ -31,8 +31,6 @@ void* connection(void* d) {
         fflush(stdout);
         sleep(3);
     }
-    close(s_cli[id].socket);
-    return 0;
 }
 
 void cut_buff(char *sub_cad, char *cad, int init, int c) {
@@ -64,7 +62,7 @@ int* welcome(int id, char *buffer) {
     strcat(buffer, "!!!");
 
     if (s_cli[id].sign_in == 1) {
-        send(s_cli[id].socket, buffer, MAXLINE, 0);
+        send(s_cli[id].socket, buffer, MAX_LINE_LEN, 0);
     }
     return 0;
 }
@@ -80,7 +78,7 @@ int* add_client(int id, char *buffer, char *name) {
     strcat(buffer, " ha ingresado en el chat.");
     for(int i = 0; i < clients; i++) {
         if (i != id && s_cli[i].sign_in == 1) {
-            send(s_cli[i].socket, buffer, MAXLINE, 0);
+            send(s_cli[i].socket, buffer, MAX_LINE_LEN, 0);
         }
         s_cli[id].sign_in = 1;
     }
@@ -91,7 +89,7 @@ int* client_list(int id) {
     //Se envia al cliente todos los usuarios menos los que hayan abandonado la sesión y el de el propio
     for(int i = 0; i < clients; i++) {
         if(i != id && s_cli[i].sign_in == 1 && s_cli[i].status == 0) {
-            send(s_cli[id].socket, s_cli[i].username, MAXLINE, 0);
+            send(s_cli[id].socket, s_cli[i].username, MAX_LINE_LEN, 0);
         }
     }
     return 0;
@@ -102,10 +100,10 @@ int* end_chat(int id, char *buffer) {
     strcpy(buffer, "El usuario ");
     strcat(buffer, s_cli[id].username);
     strcat(buffer, " ha abandonado el chat.");
-    bzero(s_cli[id].username, MAXLINE);
+
     for (int i = 0; i < clients; i++) {
         if (i != id && s_cli[i].sign_in == 1) {
-            send(s_cli[i].socket, buffer, MAXLINE, 0);
+            send(s_cli[i].socket, buffer, MAX_LINE_LEN, 0);
         }
         s_cli[id].sign_in = 0;
     }
@@ -126,7 +124,7 @@ int* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
     /* -------------------------------------- */
 
     //Le quitamos la cadena CHAT
-    cut_buff(name, buffer, 5, MAXLINE-5);
+    cut_buff(name, buffer, 5, MAX_LINE_LEN-5);
     //Nos quedamos sólo con el nombre, quitando desde el primer espacio en blanco hasta el final
     strtok(name, " ");
     //Obtenemos el índice del cliente destino
@@ -139,7 +137,7 @@ int* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
     // Chequeamos si el usuario esta busy o idle
     if (s_cli[id_destination].status == 1) {
         char *msg = "El usuario con en el que desea chatear se encuentra ocupado.";
-        send(s_cli[id].socket, msg, MAXLINE, 0);
+        send(s_cli[id].socket, msg, MAX_LINE_LEN, 0);
         return -2;
     }
 
@@ -147,7 +145,7 @@ int* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
     if (s_cli[id_destination].socket == 0) {
         // Socket inválido.
         char *msg = "El usuario con en el que desea chatear no se encuentra en la sala.";
-        send(s_cli[id].socket, msg, MAXLINE, 0);
+        send(s_cli[id].socket, msg, MAX_LINE_LEN, 0);
         return -3;
     }
 
@@ -164,10 +162,10 @@ int* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
     strcat(name, ": ");
 
     //Recortamos el CHAT, el nombre, y los dos espacios hasta el mensaje(se suma solo uno (un espacio)
-    cut_buff(temp, buffer, 5+len+1, MAXLINE-(5+len+1));
+    cut_buff(temp, buffer, 5+len+1, MAX_LINE_LEN-(5+len+1));
     strcat(name, temp); // se envia el mensaje completo con el nick del usuario
 
-    send(s_cli[id_destination].socket, name, MAXLINE, 0);
+    send(s_cli[id_destination].socket, name, MAX_LINE_LEN, 0);
     s_cli[id].status = 1;
     s_cli[id_destination].status = 1;
 
