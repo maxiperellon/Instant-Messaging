@@ -10,7 +10,7 @@
 #include <mysql/mysql.h>
 #include <time.h>
 
-#define SERVER_PORT 8001
+#define SERVER_PORT 8000
 #define NUM_CLIENTS 10
 #define MAX_LINE_LEN 512
 #define MAX_NAME_LEN 32
