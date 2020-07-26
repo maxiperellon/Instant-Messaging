@@ -3,7 +3,7 @@
 /* Insertar datos de la conversacion a la base de BD */
 
 void insert_data(MYSQL *conn, char *date, char *username1, char *username2, char *msg){
-    char query[512];
+    char query[MAX_QUERY_LEN];
     sprintf(query, "INSERT INTO `data` (`id_data`, `date`, `user1`, `user2`, `msg`) VALUES (NULL, '%s', '%s', '%s', '%s');", date, username1, username2, msg);
 
     if((mysql_query(conn, query)==0)){

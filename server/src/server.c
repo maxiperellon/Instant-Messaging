@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
     while(1) {
         socklen_t cli_size = sizeof(cli_addr); /* Obtenemos el tamaño de la estructura en bytes (16)*/
 		int conn_accept = accept(socket_fd, (struct sockaddr*)&cli_addr, &cli_size);
-		//printf("prueba: %d", conn_accept);
+
 		if (conn_accept < 0) {
             error_conn_accept();
 		} else {
@@ -78,6 +78,7 @@ int main(int argc, char *argv[]) {
 		    s_cli[id].socket = conn_accept;
 		    s_cli[id].sign_in = 0;
 		    s_cli[id].status = 0;
+		    s_cli[id].connected_to = -1;
 		    clients++;
             if (pthread_create(&thread, NULL, connection, (void *)&id) < 0) {
                 error_thread_create();

@@ -1,7 +1,7 @@
 #include "header.h"
 #include "extern.h"
 
-void* connection(void* d) {
+void connection(void* d) {
     int *ide, id;
     ide = (int* ) d;
     id = *ide;
@@ -56,7 +56,7 @@ int search_client_by_name(char* name) {
     return -1;
 }
 
-int* welcome(int id, char *buffer) {
+int welcome(int id, char *buffer) {
     strcpy(buffer, "\tHola ");
     strcat(buffer, s_cli[id].username);
     strcat(buffer, "!!!");
@@ -67,7 +67,7 @@ int* welcome(int id, char *buffer) {
     return 0;
 }
 
-int* add_client(int id, char *buffer, char *name) {
+int add_client(int id, char *buffer, char *name) {
     int len = strlen(buffer);
     //Le quitamos el ADD
     cut_buff(name, buffer, 4, len-4);
@@ -85,7 +85,7 @@ int* add_client(int id, char *buffer, char *name) {
     return 0;
 }
 
-int* client_list(int id) {
+int client_list(int id) {
     //Se envia al cliente todos los usuarios menos los que hayan abandonado la sesión y el de el propio
     for(int i = 0; i < clients; i++) {
         if(i != id && s_cli[i].sign_in == 1 && s_cli[i].status == 0) {
@@ -95,28 +95,33 @@ int* client_list(int id) {
     return 0;
 }
 
-int* end_chat(int id, char *buffer) {
+int end_chat(int id, char *buffer) {
     //Se informa a todos menos a él mismo y al que se haya ido
     strcpy(buffer, "El usuario ");
     strcat(buffer, s_cli[id].username);
     strcat(buffer, " ha abandonado el chat.");
+    int id_destination = s_cli[id].connected_to;
 
     for (int i = 0; i < clients; i++) {
         if (i != id && s_cli[i].sign_in == 1) {
             send(s_cli[i].socket, buffer, MAX_LINE_LEN, 0);
         }
-        s_cli[id].sign_in = 0;
+
+        s_cli[id_destination].status       = 0;
+        s_cli[id_destination].connected_to = -1;
+        s_cli[id].status                   = 0;
+        s_cli[id].connected_to             = -1;
+
     }
     return 0;
 }
 
-int* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
+int chat_with_other_user(int id, char *buffer, char *name, char *temp) {
 
     /*------------- Fecha y hora ------------ */
-    time_t t;
+    time_t t = time(NULL);
     struct tm *tm, *tm1;
     char date[100], hour[50];
-    t=time(NULL);
     tm=localtime(&t);
     tm1=localtime(&t);
     strftime(date, 100, "%d/%m/%Y", tm);
@@ -136,9 +141,21 @@ int* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
 
     // Chequeamos si el usuario esta busy o idle
     if (s_cli[id_destination].status == 1) {
-        char *msg = "El usuario con en el que desea chatear se encuentra ocupado.";
-        send(s_cli[id].socket, msg, MAX_LINE_LEN, 0);
-        return -2;
+        if (s_cli[id].connected_to != id_destination) {
+            char *msg = "El usuario con en el que desea chatear se encuentra ocupado.";
+            send(s_cli[id].socket, msg, MAX_LINE_LEN, 0);
+            //free(msg);
+            return -2;
+        }
+    }
+    else {
+        if (s_cli[id].status == 1) {
+            if (s_cli[id].connected_to != id_destination) {
+                char *msg = "Usted está chateando con otra persona.";
+                send(s_cli[id].socket, msg, MAX_LINE_LEN, 0);
+                return -2;
+            }
+        }
     }
 
     // Podemos chequear si el socket del cliente es válido.
@@ -146,6 +163,7 @@ int* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
         // Socket inválido.
         char *msg = "El usuario con en el que desea chatear no se encuentra en la sala.";
         send(s_cli[id].socket, msg, MAX_LINE_LEN, 0);
+       // free(msg);
         return -3;
     }
 
@@ -168,6 +186,8 @@ int* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
     send(s_cli[id_destination].socket, name, MAX_LINE_LEN, 0);
     s_cli[id].status = 1;
     s_cli[id_destination].status = 1;
+    s_cli[id].connected_to = id_destination;
+    s_cli[id_destination].connected_to = id;
 
     //Se insertan los valores a la base de datos
     insert_data(conn, time, s_cli[id].username, s_cli[id_destination].username, temp);
@@ -178,7 +198,7 @@ int* chat_with_other_user(int id, char *buffer, char *name, char *temp) {
     return 0;
 }
 
-int* save_to_log(char *date, char *username1, char *username2, char *msg){
+int save_to_log(char *date, char *username1, char *username2, char *msg){
     char string[128];
 
     FILE *fp;

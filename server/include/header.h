@@ -10,19 +10,20 @@
 #include <mysql/mysql.h>
 #include <time.h>
 
-#define SERVER_PORT 8000
+#define SERVER_PORT 8001
 #define NUM_CLIENTS 10
 #define MAX_LINE_LEN 512
 #define MAX_NAME_LEN 32
+#define MAX_QUERY_LEN 512
 
-void* connection(void* d);
+void connection(void* d);
 void cut_buff(char *subCad, char *cad, int init, int c);
 int search_client_by_name(char* name);
-int* welcome(int id, char *buffer);
-int* add_client(int id, char *buffer, char *name);
-int* client_list(int id);
-int* end_chat(int id, char *buffer);
-int* chat_with_other_user(int id, char *buffer, char *name, char *temp);
+int welcome(int id, char *buffer);
+int add_client(int id, char *buffer, char *name);
+int client_list(int id);
+int end_chat(int id, char *buffer);
+int chat_with_other_user(int id, char *buffer, char *name, char *temp);
 
 /* -----------------------------------DATABASE-------------------------------------- */
 
@@ -36,14 +37,7 @@ void insert_data(MYSQL *conn, char *date, char *username1, char *username2, char
 
 /* -------------------------------------LOG----------------------------------------- */
 
-typedef struct _message {
-    time_t date;
-    char username1[MAX_NAME_LEN];
-    char username2[MAX_NAME_LEN];
-    char buffer[MAX_LINE_LEN];
-} message;
-
-int* save_to_log(char *date, char *username1, char *username2, char *msg);
+int save_to_log(char *date, char *username1, char *username2, char *msg);
 
 /* -------------------------------------LOG----------------------------------------- */
 
@@ -53,6 +47,7 @@ typedef struct _client {
     char username[MAX_NAME_LEN];
     int sign_in;
     int status;
+    int connected_to;
 } client;
 
 client s_cli[NUM_CLIENTS];
