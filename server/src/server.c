@@ -5,7 +5,7 @@
 
 int main(int argc, char *argv[]) {
 
-    conn = mysql_init(NULL); /*inicializacion a nula la conexión */
+    conn = mysql_init(NULL); /* inicializacion a nula la conexión */
 
     /* conectar a la base de datos */
     if (!mysql_real_connect(conn, SERVER, USER, PASSWORD, DATABASE, 0, NULL, 0)) { /* definir los parámetros de la conexión antes establecidos */
@@ -42,9 +42,9 @@ int main(int argc, char *argv[]) {
         error_socket();
     }
 
-    server_addr.sin_family = AF_INET; //tipo de conexión (por red o interna)
-    server_addr.sin_addr.s_addr = htonl(INADDR_ANY); //es la direccion del cliente al que se quiere atender -> INADDR_ANY (valor con el que se atiende a cualquier cliente)
-    server_addr.sin_port = htons(SERVER_PORT); //es el numero que le corresponde al puerto
+    server_addr.sin_family = AF_INET; // tipo de conexión (por red o interna)
+    server_addr.sin_addr.s_addr = htonl(INADDR_ANY); // es la direccion del cliente al que se quiere atender -> INADDR_ANY (valor con el que se atiende a cualquier cliente)
+    server_addr.sin_port = htons(SERVER_PORT); // es el numero que le corresponde al puerto
     int port = ntohs(server_addr.sin_port);
 
     /* Asociamos el socket a un puerto local */ //bind()
@@ -65,9 +65,9 @@ int main(int argc, char *argv[]) {
 
     pthread_t thread;
 
-    /*Aceptación de clientes*/
+    /* Aceptación de clientes */
     while(1) {
-        socklen_t cli_size = sizeof(cli_addr); /* Obtenemos el tamaño de la estructura en bytes (16)*/
+        socklen_t cli_size = sizeof(cli_addr); /* Obtenemos el tamaño de la estructura en bytes (16) */
 		int conn_accept = accept(socket_fd, (struct sockaddr*)&cli_addr, &cli_size);
 
 		if (conn_accept < 0) {
@@ -93,11 +93,7 @@ int main(int argc, char *argv[]) {
 
             }
         }
-	    //sleep(1);
     }
-
     close(socket_fd);
-    printf("SERVIDOR FINALIZADO..\n");
-
     return 0;
 }

@@ -8,8 +8,8 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#define SERVER_PORT 8001
+#define SERVER_PORT 8000
 #define MAX_LINE_LEN 512
 
-void *send_msg(void* s);
-void *recv_msg(void* r);
+void send_msg(void* s);
+void recv_msg(void* r);
