@@ -21,7 +21,7 @@
     ##########################################
     
             Servidor CONECTADO...
-            PUERTO: 8001
+            PUERTO: 8000
     
     ##########################################
             
@@ -42,8 +42,11 @@
      
              Introduce ADD y tu nombre de usuario 
              ADD: 'Agrega tu nombre de usuario al servidor' 
-             
-     -> 
+             LIST: 'Muestra los usuarios conectados y disponibles'
+             CHAT <username> msg: 'Permite chatear con un usuario que se encuentre disponible'
+             BYE: 'Permite salir del chat y poder chatear con otro usuario disponible'
+     
+    -> 
 ```
     
 ##   

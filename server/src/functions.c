@@ -43,12 +43,11 @@ void cut_buff(char *sub_cad, char *cad, int init, int c) {
 }
 
 int search_client_by_name(char* name) {
-    for(int i = 0; i < clients; i++) {
-        if(strcmp(s_cli[i].username, name) == 0) {
+    for (int i = 0; i < clients; i++) {
+        if (strcmp(s_cli[i].username, name) == 0) {
             if (s_cli[i].sign_in == 1) {
                 return i;
-            }
-            else {
+            } else {
                 return -1;
             }
         }
@@ -76,7 +75,7 @@ int add_client(int id, char *buffer, char *name) {
     strcpy(buffer, "El usuario ");
     strcat(buffer, name);
     strcat(buffer, " ha ingresado en el chat.");
-    for(int i = 0; i < clients; i++) {
+    for (int i = 0; i < clients; i++) {
         if (i != id && s_cli[i].sign_in == 1) {
             send(s_cli[i].socket, buffer, MAX_LINE_LEN, 0);
         }
@@ -87,8 +86,8 @@ int add_client(int id, char *buffer, char *name) {
 
 int client_list(int id) {
     //Se envia al cliente todos los usuarios menos los que hayan abandonado la sesión y el de el propio
-    for(int i = 0; i < clients; i++) {
-        if(i != id && s_cli[i].sign_in == 1 && s_cli[i].status == 0) {
+    for (int i = 0; i < clients; i++) {
+        if (i != id && s_cli[i].sign_in == 1 && s_cli[i].status == 0) {
             send(s_cli[id].socket, s_cli[i].username, MAX_LINE_LEN, 0);
         }
     }
@@ -107,10 +106,10 @@ int end_chat(int id, char *buffer) {
             send(s_cli[i].socket, buffer, MAX_LINE_LEN, 0);
         }
 
-        s_cli[id_destination].status       = 0;
+        s_cli[id_destination].status = 0;
         s_cli[id_destination].connected_to = -1;
-        s_cli[id].status                   = 0;
-        s_cli[id].connected_to             = -1;
+        s_cli[id].status = 0;
+        s_cli[id].connected_to = -1;
 
     }
     return 0;
@@ -144,11 +143,9 @@ int chat_with_other_user(int id, char *buffer, char *name, char *temp) {
         if (s_cli[id].connected_to != id_destination) {
             char *msg = "El usuario con en el que desea chatear se encuentra ocupado.";
             send(s_cli[id].socket, msg, MAX_LINE_LEN, 0);
-            //free(msg);
             return -2;
         }
-    }
-    else {
+    } else {
         if (s_cli[id].status == 1) {
             if (s_cli[id].connected_to != id_destination) {
                 char *msg = "Usted está chateando con otra persona.";
@@ -163,7 +160,6 @@ int chat_with_other_user(int id, char *buffer, char *name, char *temp) {
         // Socket inválido.
         char *msg = "El usuario con en el que desea chatear no se encuentra en la sala.";
         send(s_cli[id].socket, msg, MAX_LINE_LEN, 0);
-       // free(msg);
         return -3;
     }
 

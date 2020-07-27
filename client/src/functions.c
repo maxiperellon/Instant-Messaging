@@ -1,6 +1,6 @@
 #include "header.h"
 
-void* recv_msg(void* r) {
+void recv_msg(void* r) {
     int* id;
     char buffer[MAX_LINE_LEN];
     id = (int*) r;
@@ -13,15 +13,18 @@ void* recv_msg(void* r) {
     }
 }
 
-void* send_msg(void* s) {
+void send_msg(void* s) {
     int* id;
     char buffer[MAX_LINE_LEN];
     id = (int*) s;
 
     system("clear");
     printf("\n\t\t\t>>> BIENVENIDO AL CHAT <<<<\n\n");
-    printf("\tIntroduce ADD y tu nombre de usuario \n");
-    printf("\tADD: 'Agrega tu nombre de usuario al servidor' \n");
+    printf("\tIntroduce ADD y tu nombre de usuario\n");
+    printf("\tADD: 'Agrega tu nombre de usuario al servidor'\n");
+    printf("\tLIST: 'Muestra los usuarios conectados y disponibles'\n");
+    printf("\tCHAT <username> msg: 'Permite chatear con un usuario que se encuentre disponible'\n");
+    printf("\tBYE: 'Permite salir del chat y poder chatear con otro usuario disponible'\n");
 
     while(1) {
         printf("\t\n-> ");

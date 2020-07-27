@@ -10,11 +10,13 @@
 #include <mysql/mysql.h>
 #include <time.h>
 
-#define SERVER_PORT 8001
+#define SERVER_PORT 8000
 #define NUM_CLIENTS 10
 #define MAX_LINE_LEN 512
 #define MAX_NAME_LEN 32
 #define MAX_QUERY_LEN 512
+
+/* -----------------------------------FUNCIONES------------------------------------- */
 
 void connection(void* d);
 void cut_buff(char *subCad, char *cad, int init, int c);
@@ -24,6 +26,8 @@ int add_client(int id, char *buffer, char *name);
 int client_list(int id);
 int end_chat(int id, char *buffer);
 int chat_with_other_user(int id, char *buffer, char *name, char *temp);
+
+/* -----------------------------------FUNCIONES------------------------------------- */
 
 /* -----------------------------------DATABASE-------------------------------------- */
 
@@ -41,6 +45,8 @@ int save_to_log(char *date, char *username1, char *username2, char *msg);
 
 /* -------------------------------------LOG----------------------------------------- */
 
+/* ----------------------------ESTRUCTURA DEL CLIENTE------------------------------- */
+
 typedef struct _client {
     int id_client;
     int socket;
@@ -51,3 +57,6 @@ typedef struct _client {
 } client;
 
 client s_cli[NUM_CLIENTS];
+
+/* ----------------------------ESTRUCTURA DEL CLIENTE------------------------------- */
+
