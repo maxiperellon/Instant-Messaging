@@ -18,3 +18,4 @@
 
 - Descargar e instalar phpmyadmin en URL:https://www.phpmyadmin.net/ o alguna herramienta similar.
 - Una vez que tenemos la base de datos instalada, se importa la base de datos chat.sql que se encuentra en el directorio en /server/db.
+
