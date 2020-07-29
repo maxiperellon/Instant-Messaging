@@ -106,9 +106,9 @@ int end_chat(int id, char *buffer) {
             send(s_cli[i].socket, buffer, MAX_LINE_LEN, 0);
         }
 
-        s_cli[id_destination].status = 0;
+        s_cli[id_destination].status = IDLE;
         s_cli[id_destination].connected_to = -1;
-        s_cli[id].status = 0;
+        s_cli[id].status = IDLE;
         s_cli[id].connected_to = -1;
 
     }
@@ -139,14 +139,14 @@ int chat_with_other_user(int id, char *buffer, char *name, char *temp) {
     }
 
     // Chequeamos si el usuario esta busy o idle
-    if (s_cli[id_destination].status == 1) {
+    if (s_cli[id_destination].status == BUSY) {
         if (s_cli[id].connected_to != id_destination) {
             char *msg = "El usuario con en el que desea chatear se encuentra ocupado.";
             send(s_cli[id].socket, msg, MAX_LINE_LEN, 0);
             return -2;
         }
     } else {
-        if (s_cli[id].status == 1) {
+        if (s_cli[id].status == BUSY) {
             if (s_cli[id].connected_to != id_destination) {
                 char *msg = "Usted está chateando con otra persona.";
                 send(s_cli[id].socket, msg, MAX_LINE_LEN, 0);
@@ -180,8 +180,8 @@ int chat_with_other_user(int id, char *buffer, char *name, char *temp) {
     strcat(name, temp); // se envia el mensaje completo con el nick del usuario
 
     send(s_cli[id_destination].socket, name, MAX_LINE_LEN, 0);
-    s_cli[id].status = 1;
-    s_cli[id_destination].status = 1;
+    s_cli[id].status = BUSY;
+    s_cli[id_destination].status = BUSY;
     s_cli[id].connected_to = id_destination;
     s_cli[id_destination].connected_to = id;
 

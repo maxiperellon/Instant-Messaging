@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
             s_cli[id].id_client = id;
 		    s_cli[id].socket = conn_accept;
 		    s_cli[id].sign_in = 0;
-		    s_cli[id].status = 0;
+		    s_cli[id].status = IDLE;
 		    s_cli[id].connected_to = -1;
 		    clients++;
             if (pthread_create(&thread, NULL, connection, (void *)&id) < 0) {
