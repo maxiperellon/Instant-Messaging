@@ -18,7 +18,7 @@
 
 /* -----------------------------------FUNCIONES------------------------------------- */
 
-void connection(void* d);
+void* connection(void* d);
 void cut_buff(char *subCad, char *cad, int init, int c);
 int search_client_by_name(char* name);
 int welcome(int id, char *buffer);
