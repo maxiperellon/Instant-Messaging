@@ -1,7 +1,7 @@
 #include "header.h"
 #include "extern.h"
 
-void connection(void* d) {
+void* connection(void* d) {
     int *ide, id;
     ide = (int* ) d;
     id = *ide;
