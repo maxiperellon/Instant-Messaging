@@ -11,5 +11,5 @@
 #define SERVER_PORT 8000
 #define MAX_LINE_LEN 512
 
-void send_msg(void* s);
-void recv_msg(void* r);
+void* send_msg(void* s);
+void* recv_msg(void* r);

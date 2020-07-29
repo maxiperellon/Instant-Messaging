@@ -1,6 +1,6 @@
 #include "header.h"
 
-void recv_msg(void* r) {
+void* recv_msg(void* r) {
     int* id;
     char buffer[MAX_LINE_LEN];
     id = (int*) r;
@@ -13,7 +13,7 @@ void recv_msg(void* r) {
     }
 }
 
-void send_msg(void* s) {
+void* send_msg(void* s) {
     int* id;
     char buffer[MAX_LINE_LEN];
     id = (int*) s;
