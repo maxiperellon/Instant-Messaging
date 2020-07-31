@@ -16,7 +16,7 @@ void* connection(void* d) {
             welcome(id, buffer);
         }
 
-        if(strstr(buffer, "LIST") && s_cli[id].sign_in == 1 && s_cli[id].status == 0) {
+        if(strstr(buffer, "LIST") && s_cli[id].sign_in == 1 && s_cli[id].status == IDLE) {
             client_list(id);
         }
 
@@ -85,9 +85,9 @@ int add_client(int id, char *buffer, char *name) {
 }
 
 int client_list(int id) {
-    //Se envia al cliente todos los usuarios menos los que hayan abandonado la sesión y el de el propio
+    //Se envia al cliente todos los usuarios disponibles
     for (int i = 0; i < clients; i++) {
-        if (i != id && s_cli[i].sign_in == 1 && s_cli[i].status == 0) {
+        if (i != id && s_cli[i].sign_in == 1 && s_cli[i].status == IDLE) {
             send(s_cli[id].socket, s_cli[i].username, MAX_LINE_LEN, 0);
         }
     }
@@ -134,10 +134,6 @@ int chat_with_other_user(int id, char *buffer, char *name, char *temp) {
     //Obtenemos el índice del cliente destino
     int id_destination = search_client_by_name(name);
 
-    if (id_destination < 0 || id_destination > clients - 1) {
-        return -1;
-    }
-
     // Chequeamos si el usuario esta busy o idle
     if (s_cli[id_destination].status == BUSY) {
         if (s_cli[id].connected_to != id_destination) {
@@ -156,7 +152,7 @@ int chat_with_other_user(int id, char *buffer, char *name, char *temp) {
     }
 
     // Podemos chequear si el socket del cliente es válido.
-    if (s_cli[id_destination].socket == 0) {
+    if (id_destination < 0 && s_cli[id_destination].socket == 0) {
         // Socket inválido.
         char *msg = "El usuario con en el que desea chatear no se encuentra en la sala.";
         send(s_cli[id].socket, msg, MAX_LINE_LEN, 0);
@@ -197,8 +193,8 @@ int chat_with_other_user(int id, char *buffer, char *name, char *temp) {
 int save_to_log(char *date, char *username1, char *username2, char *msg){
     char string[128];
 
-    FILE *fp;
-    fp = fopen("chat.log", "a+");
+    FILE *fp;   //se necesita punteros a achivos para leer o escribir
+    fp = fopen("chat.log", "a+");   //en fopen() con a+ añade o crea un archivo binario de escritura/lectura. fopen() devuelve un puntero a un archivo.
 
     strcpy(string, date);
     strcat(string," - user1: ");
@@ -208,9 +204,9 @@ int save_to_log(char *date, char *username1, char *username2, char *msg){
     strcat(string," - message: ");
     strcat(string, msg);
     strcat(string,"\n");
-    fputs(string, fp);
+    fputs(string, fp);  //fputs() escribe la cadena en el archivo fp
 
-    fclose(fp);
+    fclose(fp); //se cierra fp que es  el  puntero  al  archivo  devuelto  por  la  llamada  a fopen()
 
     return 0;
 }
