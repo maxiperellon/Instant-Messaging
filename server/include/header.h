@@ -51,12 +51,12 @@ int save_to_log(char *date, char *username1, char *username2, char *msg);
 /* ----------------------------ESTRUCTURA DEL CLIENTE------------------------------- */
 
 typedef struct _client {
-    int id_client;
-    int socket;
-    char username[MAX_NAME_LEN];
-    int sign_in;
-    int status;
-    int connected_to;
+    int id_client;                      /* Identificador único del cliente */
+    int socket;                         /* Identificador de socket */
+    char username[MAX_NAME_LEN];        /* Username del cliente */
+    int sign_in;                        /* Identificador de registro */
+    int status;                         /* Identificador de estado (idle / busy) */
+    int connected_to;                   /* Identificador de conexión con otro cliente */
 } client;
 
 client s_cli[NUM_CLIENTS];

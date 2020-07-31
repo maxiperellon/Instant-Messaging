@@ -85,7 +85,7 @@ int add_client(int id, char *buffer, char *name) {
 }
 
 int client_list(int id) {
-    //Se envia al cliente todos los usuarios menos los que hayan abandonado la sesión y el de el propio
+    //Se envia al cliente todos los usuarios disponibles
     for (int i = 0; i < clients; i++) {
         if (i != id && s_cli[i].sign_in == 1 && s_cli[i].status == IDLE) {
             send(s_cli[id].socket, s_cli[i].username, MAX_LINE_LEN, 0);
