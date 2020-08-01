@@ -15,9 +15,10 @@
 #define MAX_LINE_LEN 512
 #define MAX_NAME_LEN 32
 #define MAX_QUERY_LEN 512
+#define UNREGISTERED 0
+#define REGISTERED 1
 #define IDLE 0
 #define BUSY 1
-
 
 /* -----------------------------------FUNCIONES------------------------------------- */
 
