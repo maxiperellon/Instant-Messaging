@@ -11,20 +11,20 @@ void* connection(void* d) {
         printf("\nid: %d\n", id);
         recv(s_cli[id].socket, buffer, MAX_LINE_LEN,0);
 
-        if(strstr(buffer, "ADD") && s_cli[id].sign_in == 0) {
+        if(strstr(buffer, "ADD") && s_cli[id].sign_in == UNREGISTERED) {
             add_client(id, buffer, name);
             welcome(id, buffer);
         }
 
-        if(strstr(buffer, "LIST") && s_cli[id].sign_in == 1 && s_cli[id].status == IDLE) {
+        if(strstr(buffer, "LIST") && s_cli[id].sign_in == REGISTERED && s_cli[id].status == IDLE) {
             client_list(id);
         }
 
-        if(strstr(buffer, "CHAT") && s_cli[id].sign_in == 1) {
+        if(strstr(buffer, "CHAT") && s_cli[id].sign_in == REGISTERED) {
             chat_with_other_user(id, buffer, name, temp);
         }
 
-        if(strstr(buffer, "BYE") && s_cli[id].sign_in == 1) {
+        if(strstr(buffer, "BYE") && s_cli[id].sign_in == REGISTERED) {
             end_chat(id, buffer);
         }
 
@@ -45,7 +45,7 @@ void cut_buff(char *sub_cad, char *cad, int init, int c) {
 int search_client_by_name(char* name) {
     for (int i = 0; i < clients; i++) {
         if (strcmp(s_cli[i].username, name) == 0) {
-            if (s_cli[i].sign_in == 1) {
+            if (s_cli[i].sign_in == REGISTERED) {
                 return i;
             } else {
                 return -1;
@@ -60,7 +60,7 @@ int welcome(int id, char *buffer) {
     strcat(buffer, s_cli[id].username);
     strcat(buffer, "!!!");
 
-    if (s_cli[id].sign_in == 1) {
+    if (s_cli[id].sign_in == REGISTERED) {
         send(s_cli[id].socket, buffer, MAX_LINE_LEN, 0);
     }
     return 0;
@@ -76,10 +76,10 @@ int add_client(int id, char *buffer, char *name) {
     strcat(buffer, name);
     strcat(buffer, " ha ingresado en el chat.");
     for (int i = 0; i < clients; i++) {
-        if (i != id && s_cli[i].sign_in == 1) {
+        if (i != id && s_cli[i].sign_in == REGISTERED) {
             send(s_cli[i].socket, buffer, MAX_LINE_LEN, 0);
         }
-        s_cli[id].sign_in = 1;
+        s_cli[id].sign_in = REGISTERED;
     }
     return 0;
 }
@@ -87,7 +87,7 @@ int add_client(int id, char *buffer, char *name) {
 int client_list(int id) {
     //Se envia al cliente todos los usuarios disponibles
     for (int i = 0; i < clients; i++) {
-        if (i != id && s_cli[i].sign_in == 1 && s_cli[i].status == IDLE) {
+        if (i != id && s_cli[i].sign_in == REGISTERED && s_cli[i].status == IDLE) {
             send(s_cli[id].socket, s_cli[i].username, MAX_LINE_LEN, 0);
         }
     }
@@ -102,7 +102,7 @@ int end_chat(int id, char *buffer) {
     int id_destination = s_cli[id].connected_to;
 
     for (int i = 0; i < clients; i++) {
-        if (i != id && s_cli[i].sign_in == 1) {
+        if (i != id && s_cli[i].sign_in == REGISTERED) {
             send(s_cli[i].socket, buffer, MAX_LINE_LEN, 0);
         }
 
