@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
 
     pthread_t send_thread, recv_thread;
 
-    //CREACION DEL SOCKET
+    //Creación del Socket
 
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {

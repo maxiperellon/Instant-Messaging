@@ -1,6 +1,6 @@
 #include "header.h"
 
-/* Insertar datos de la conversacion a la base de BD */
+/* Insertar datos de la conversación a la base de BD */
 
 void insert_data(MYSQL *conn, char *date, char *username1, char *username2, char *msg){
     char query[MAX_QUERY_LEN];

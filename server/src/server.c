@@ -5,7 +5,7 @@
 
 int main(int argc, char *argv[]) {
 
-    conn = mysql_init(NULL); /* inicializacion a nula la conexión */
+    conn = mysql_init(NULL); /* inicialización a nula la conexión */
 
     /* conectar a la base de datos */
     if (!mysql_real_connect(conn, SERVER, USER, PASSWORD, DATABASE, 0, NULL, 0)) { /* definir los parámetros de la conexión antes establecidos */
@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
     }
 
     /* enviar consulta SQL */
-    if (mysql_query(conn, "show tables")) { /* definicion de la consulta y el origen de la conexion */
+    if (mysql_query(conn, "show tables")) { /* definición de la consulta y el origen de la conexión */
         fprintf(stderr, "%s\n", mysql_error(conn));
         exit(1);
     }
@@ -26,7 +26,7 @@ int main(int argc, char *argv[]) {
     res = mysql_use_result(conn);
 
     while ((row = mysql_fetch_row(res)) != NULL) /* recorrer la variable res con todos los registros obtenidos para su uso */
-        printf("\nTable: '%s'\n", row[0]); /* la variable row se convierte en un arreglo por el numero de campos que hay en la tabla */
+        printf("\nTable: '%s'\n", row[0]); /* la variable row se convierte en un arreglo por el número de campos que hay en la tabla */
         printf("\n##########################################\n");
 
     /* se libera la variable res */
@@ -35,20 +35,20 @@ int main(int argc, char *argv[]) {
     struct sockaddr_in server_addr;
     struct sockaddr_in cli_addr;
 
-    //CREACION DEL SOCKET
+    //Creación del Socket
     int socket_fd = socket(AF_INET, SOCK_STREAM, 0);
-    //AF_INET es el dominio y SOCK_STREAM se especifica que la conexion es TCP - socket de flujo
+    //AF_INET es el dominio y SOCK_STREAM se especifica que la conexión es TCP - socket de flujo
     if (socket_fd < 0){
         error_socket();
     }
 
     server_addr.sin_family = AF_INET; // tipo de conexión (por red o interna)
-    server_addr.sin_addr.s_addr = htonl(INADDR_ANY); // es la direccion del cliente al que se quiere atender -> INADDR_ANY (valor con el que se atiende a cualquier cliente)
-    server_addr.sin_port = htons(SERVER_PORT); // es el numero que le corresponde al puerto
+    server_addr.sin_addr.s_addr = htonl(INADDR_ANY); // es la dirección del cliente al que se quiere atender -> INADDR_ANY (valor con el que se atiende a cualquier cliente)
+    server_addr.sin_port = htons(SERVER_PORT); // es el número que le corresponde al puerto
     int port = ntohs(server_addr.sin_port);
 
     /* Asociamos el socket a un puerto local */ //bind()
-	if (bind(socket_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) { /* Comprobamos si se asocio el socket a un puerto local */
+	if (bind(socket_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) { /* Comprobamos si se asoció el socket a un puerto local */
         error_bind(port, socket_fd);
   	}
 
