@@ -5,7 +5,7 @@ void* connection(void* d) {
     int *ide, id;
     ide = (int* ) d;
     id = *ide;
-    char buffer[MAX_LINE_LEN], buffer2[MAX_LINE_LEN], name[MAX_LINE_LEN], temp[MAX_LINE_LEN];
+    char buffer[MAX_LINE_LEN], name[MAX_LINE_LEN], temp[MAX_LINE_LEN];
 
     while(1) {
         printf("\nid: %d\n", id);
@@ -193,7 +193,7 @@ int chat_with_other_user(int id, char *buffer, char *name, char *temp) {
 int save_to_log(char *date, char *username1, char *username2, char *msg){
     char string[128];
 
-    FILE *fp;   //se necesita punteros a achivos para leer o escribir
+    FILE *fp;   //se necesita punteros a archivos para leer o escribir
     fp = fopen("chat.log", "a+");   //en fopen() con a+ añade o crea un archivo binario de escritura/lectura. fopen() devuelve un puntero a un archivo.
 
     strcpy(string, date);
